@@ -1,0 +1,63 @@
+#include<iostream>
+#include<vector>
+#include<string>
+
+using namespace std;
+
+bool check(vector<int> v) // 등차수열인지 확인하는 함수
+{
+	for (int i = 0; i < v.size()-1; i++)
+	{
+		if (v[i] != v[i + 1])
+			return false;
+	}
+	return true;
+}
+
+int Search(string input, int n, int count) // 검사 함수
+{
+	if (n == 1)
+	{
+		return count+1;
+	}
+
+	if (input.size() == 1 || input.size() == 2)
+	{
+		count+= Search(input, n-1, count);
+		return count+1;
+	}
+
+	vector<int> v;
+
+	for (int i = 0; i<input.size()-1; i++) //자리의 수 마다 빼기를 한 값을 v에 저장하여 check함수를 통해 등차수열인지 확인한다.
+	{	
+		if (input[i] >= input[i + 1])
+			v.push_back(input[i] - input[i + 1]);
+		else
+			v.push_back(input[i] - input[i + 1]);
+	}
+
+	string reinput = to_string(n - 1);
+	count += Search(reinput, n - 1, count);
+
+	if (check(v))
+		count += 1;
+
+	return count;
+}
+
+
+int main(int argc, char*argv[])
+{
+	string input;
+	cin >> input;
+
+	int count = 0;
+	int changeinput = stoi(input); //string형을 int형으로 바꿔주는 stoi함수
+
+	count+=Search(input, changeinput, count);//재귀함수를 통해 입력값 ex:)210부터 1까지 한 개씩 한수인지 검사
+	
+	cout << count << endl;
+
+	return 0;
+}
