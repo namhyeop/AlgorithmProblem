@@ -1,0 +1,52 @@
+//공부할려고 재귀함수로 처음에 구현했는데 메모리 초과 나와서 반복문으로 코딩함
+#include<iostream>
+
+using namespace std;
+
+int flag = 0; //예외처리를 위해 존재
+
+int search(long int input, int n) //간다히 들어오는 입력에 대한 자릿수를 더해서 n에 더하여 생성자인 지확인하는 함수
+{		
+	while (input >= n)
+	{
+		int Searchn = n;
+		int tmp = 0;
+
+		while (Searchn != 0)
+		{
+			tmp += Searchn % 10;
+			Searchn = Searchn / 10;
+		}
+
+		if (input == (tmp + n))
+		{
+			cout << n << endl;
+			flag = 1;
+			break;
+		}
+		n++;
+	}	
+
+	
+
+	return 0;
+}
+
+int main(int argc, char * argv[])
+{
+	long int input;
+	cin >> input;
+
+	if (input<0 || input >1000000 || input == '\n')
+	{
+		cout << 0 << endl;
+		return 0;
+	}
+
+	search(input,1);
+
+	if (flag == 0) //생성자가 없을 경우 예외처리
+		cout << 0 << endl;
+
+	return 0;
+}
