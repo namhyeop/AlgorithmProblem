@@ -1,0 +1,30 @@
+#include<iostream>
+#include<algorithm>
+
+using namespace std;
+
+int Ti[15];
+int Pi[15];
+int maxDate;
+
+int search(int day)
+{
+	if (day >= maxDate) return 0;
+	int ret = 0;
+	if (Ti[day] + day <= maxDate)
+	{
+		ret = max(ret, search(day + Ti[day]) + Pi[day]);
+	}
+		if (day + 1 < maxDate) //첫 단계 이후 다음 값의 재귀
+		ret = max(ret, search(day + 1));
+	return ret;
+}
+
+int main(int argc, char * argv[])
+{
+	cin >> maxDate;
+	for (int i = 0; i < maxDate; i++)
+		cin >> Ti[i] >> Pi[i];
+
+	cout << search(0) << endl;
+}
