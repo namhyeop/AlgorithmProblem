@@ -1,0 +1,101 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+//define MAX 8
+
+int Row, Col;
+
+int Y[4] = { 1, 0, -1, 0 };
+int X[4] = { 0, 1, 0, -1 };
+
+int result = 0;
+
+void BFS(vector<vector<int>> &tmpmap)
+{
+	vector<vector<int>> afterinfection(Row, vector<int>(Col,0));
+	copy(tmpmap.begin(), tmpmap.end(), afterinfection.begin()); //afterinfection이 필요한 이유는 밑에서 숫자 2를 만난 위치를 큐에 넣은 후 그 위치에 대해 상하좌우로 0이면 지도를 2로 설정해서 전염된 지도 값을 얻게 되므로 테스트를 위한 복사값이 필요
+	queue<pair<int, int>> q;
+	
+	for (int i = 0; i < Row; i++)
+	for (int j = 0; j < Col; j++)
+	if (afterinfection[i][j] == 2)
+		q.push({ i, j });
+
+	while (!q.empty())
+	{
+		int virusY = q.front().first;
+		int virusX = q.front().second;
+		q.pop(); //바이러스 테스했으면 pop
+
+		for (int i = 0; i < 4; i++)
+		{
+			int moveY = virusY + Y[i];
+			int moveX = virusX + X[i];
+
+			if (0 <= moveY && moveY< Row && 0<= moveX && moveX < Col) //범위 테스트
+			if (afterinfection[moveY][moveX] == 0)
+			{
+				afterinfection[moveY][moveX] = 2;
+				q.push({ moveY, moveX });
+			}
+		}
+	}
+	int count = 0; //
+
+	for (int i = 0; i < Row; i++)
+	for (int j = 0; j < Col; j++)
+	if (afterinfection[i][j] == 0)
+		count +=1;
+
+	result = max(result, count);
+}
+
+void setpillar(int cnt, vector<vector<int>> &tmpmap)
+{
+	if (cnt == 3) //기둥은 최대 3개까지라서 카운트가 3이 되면 너비우선탐색 실행
+	{
+		BFS(tmpmap);
+		return;
+	}
+
+	for (int i = 0; i < Row; i++)
+	for (int j = 0; j < Col; j++)
+	if (tmpmap[i][j] == 0)
+	{
+		tmpmap[i][j] = 1;
+		setpillar(cnt + 1,tmpmap); //3이 될때까지 재귀호출
+		tmpmap[i][j] = 0;
+	}
+}
+int main(int argc, char * argv[])
+{
+
+	cin >> Row >> Col;
+
+	vector<vector <int>> map(Row, vector<int>(Col, 0)); //초기 설정값
+	vector<vector <int>> tmpmap(Row, vector<int>(Col, 0));//재귀 호출을 위한 복사값
+	for (int i = 0; i < Row; i++)//입력값 받기
+	for (int j = 0; j < Col; j++)
+			cin >> map[i][j];
+	
+	
+	for (int i = 0; i < Row; i++)//이제부터 0행에서 왼쪽부터 오른쪽순으로 0을 만나면 1로 바꿔서 벽을 설치한 후 남은 2개의 기둥을 세우는 모든 경우의 수를 테스트를 진행할것 
+	for (int j = 0; j < Col; j++)
+	{
+		if (map[i][j] == 0)
+		{
+			copy(map.begin(), map.end(), tmpmap.begin());
+	
+			tmpmap[i][j] = 1;
+			setpillar(1,tmpmap);
+			tmpmap[i][j] = 0;//기둥에 대한 테스트가 끝나면 0으로 다시 설정
+		}
+	}
+	
+	cout << result << endl;
+	
+	return 0;
+}
