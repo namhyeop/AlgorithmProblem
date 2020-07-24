@@ -1,0 +1,104 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int Num;
+bool entranceboard[51][51];
+char board[51][51];
+
+int count()
+{
+	int result = 1;
+
+	for (int i = 0; i < Num; i++)//상하
+	{
+		int count = 1;
+		for (int j = 0; j < Num - 1; j++)
+			if (board[j][i] == board[j + 1][i])
+				count += 1;
+			else //새로운 단어가 나올 경우 최대값 갱신 후 초기화
+			{
+				result = max(result, count);
+				count = 1;
+			}
+			result = max(result, count);  //이후 기존 단어 카운트와 새로운 단어의 최대값 비교
+	}
+
+	for (int i = 0; i < Num; i++)//좌우
+	{
+		int count = 1;
+		for (int j = 1; j < Num; j++)
+		if (board[i][j-1] == board[i][j])
+			count += 1;
+		else
+		{
+			result = max(result, count);
+			count = 1;
+		}
+		result = max(result, count);
+	}
+
+	return result;
+}
+
+
+int updown()
+{
+	int updownValue = 0;
+	char tmp;
+	for (int i = 0; i < Num; i++)
+	for (int j = 0; j < Num-1; j++)
+	{
+		tmp = board[j][i];
+		board[j][i] = board[j+1][i];
+		board[j+1][i] = tmp;
+	
+		updownValue = max(updownValue, count());
+
+		tmp = board[j+1][i];
+		board[j+1][i] = board[j][i];
+		board[j][i] = tmp;
+	}
+	
+	return updownValue;
+}
+
+int leftright ()
+{
+	int leftrightValue = 0;
+	char tmp;
+	for (int i = 0; i < Num; i++)
+	for (int j = 0; j < Num-1; j++)
+	{
+		tmp = board[i][j];
+		board[i][j] = board[i][j + 1];
+		board[i][j+1] = tmp;
+
+		leftrightValue = max(leftrightValue, count());
+
+		tmp = board[i][j];
+		board[i][j] = board[i][j+1];
+		board[i][j+1] = tmp;
+	}
+	
+	return leftrightValue;
+}
+
+int main(int argc, char * argv[])
+{
+	cin >> Num;
+	
+	for (int i = 0; i < Num; i++)
+	for (int j = 0; j < Num; j++)
+		cin >> board[i][j];
+
+	int value1 = updown();
+	int value2 = leftright();
+
+	if (value1 >= value2)
+		cout << value1 << endl;
+	else
+		cout << value2 << endl;
+
+	return 0;
+}
