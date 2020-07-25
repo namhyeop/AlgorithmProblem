@@ -1,0 +1,81 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+
+int Testcase;
+vector<pair<string, pair<int, int>>> v;
+
+bool Test(vector<int> &Testscore)
+{
+	bool flag = true;
+	for (int i = 0; i < v.size(); i++)
+	{
+		int s = 0;
+		int b = 0;
+
+		for (int j = 0; j < Testscore.size(); j++)
+			for (int k = 0; k < 3; k++)
+			{
+				if (Testscore[j] == (v[i].first[k] - '0'))
+				{
+					if (j == k)
+						s++;
+					else
+						b++;
+					break;
+				}
+			}
+			if ((s != v[i].second.first) || (b != v[i].second.second))
+			{
+				flag = false;
+				break;
+			}
+		}
+		return flag;	
+}
+
+
+	int main(int argc, char *argv[])
+	{
+		cin >> Testcase;
+
+		for (int i = 0; i < Testcase; i++)
+		{
+			string num;
+			int strike;
+			int	ball;
+			cin >> num >> strike >> ball;
+
+			v.push_back({ num, { strike, ball } });
+		}
+
+		long long result = 0;
+
+		for (int i = 1; i <= 9; i++)
+		{
+			vector<int> Testscore;
+			Testscore.push_back(i);
+
+			for (int j = i + 1; j <= 9; j++)
+			{
+				Testscore.push_back(j);
+				for (int k = j + 1; k <= 9; k++)
+				{
+					Testscore.push_back(k);
+					do
+					{
+						if (Test(Testscore))
+							result++;
+
+					} while (next_permutation(Testscore.begin(), Testscore.end()));
+					Testscore.pop_back();
+				}
+				Testscore.pop_back();
+			}
+			Testscore.pop_back();
+		}
+		cout << result << endl;
+	}
