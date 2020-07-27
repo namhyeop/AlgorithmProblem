@@ -1,0 +1,152 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+using namespace std;
+
+int R, C;
+vector<vector<char>> board;
+vector<vector<char>> tmpboard;
+int result = numeric_limits<int>::max();
+int INF = numeric_limits<int>::max();
+
+int searchBlack(int i, int j, vector<vector<char>> tmpboard) //첫 번째 시작을 검정으로 강제 설정할 경우
+{
+	if (i + 8 > R || j + 8 > C)
+		return INF;
+
+	int count = 0;
+
+	if (tmpboard[i][j] != 'B') 
+	{
+		tmpboard[i][j] = 'B';
+		count++;
+	}
+	
+	for (int a = i; a < i + 8; a++)
+	{
+		for (int b = j; b < j + 7; b++)
+		{
+			if (a != i)//여기 if문은 시작 행을 제외하고 첫 번째 열이 w인지 b인지 확인후 설정해주는 if문
+			{
+				if (tmpboard[a - 1][j] == 'W' && tmpboard[a][j] == 'W')
+				{
+					tmpboard[a][j] = 'B';
+					count++;
+
+				}
+
+				if (tmpboard[a - 1][j] == 'B' && tmpboard[a][j] == 'B')
+				{
+					tmpboard[a][j] = 'W';
+					count++;
+				}
+
+			}
+			//이전에서 첫 번째 b,w 설정을 마치면 열의 설정을 순차적으로 해주는곳
+			if (tmpboard[a][b] == 'W')
+			{
+				if (tmpboard[a][b] == tmpboard[a][b + 1])
+				{
+					tmpboard[a][b + 1] = 'B';
+					count++;
+				}
+
+			}
+
+			if (tmpboard[a][b] == 'B')
+			{
+				if (tmpboard[a][b] == tmpboard[a][b + 1])
+				{
+					tmpboard[a][b + 1] = 'W';
+					count++;
+				}
+			}
+		}
+	}
+	return count;
+}
+
+int searchWhite(int i, int j, vector<vector<char>> tmpboard) //첫 번째 시작을 흰색으로 강제 설정할 경우
+{
+	if (i + 8 > R || j + 8 > C)
+		return INF;
+
+	int count = 0;
+
+	if (tmpboard[i][j] != 'W')
+	{
+		tmpboard[i][j] = 'W';
+			count++;
+	}
+
+	for (int a = i; a < i + 8; a++)
+	{
+		for (int b = j; b < j + 7; b++)
+		{
+			if (a != i)//여기 if문은 시작 행을 제외하고 첫 번째 열이 w인지 b인지 확인후 설정해주는 if문
+			{
+				if (tmpboard[a - 1][j] == 'W' && tmpboard[a][j] == 'W')
+				{
+					tmpboard[a][j] = 'B';
+					count++;
+
+				}
+
+				if (tmpboard[a - 1][j] == 'B' && tmpboard[a][j] == 'B')
+				{
+					tmpboard[a][j] = 'W';
+					count++;
+				}
+
+			}
+			//이전에서 첫 번째 b,w 설정을 마치면 열의 설정을 순차적으로 해주는곳
+			if (tmpboard[a][b] == 'W')
+			{
+				if (tmpboard[a][b] == tmpboard[a][b + 1])
+				{
+					tmpboard[a][b + 1] = 'B';
+					count++;
+				}
+
+			}
+
+			if (tmpboard[a][b] == 'B')
+			{
+				if (tmpboard[a][b] == tmpboard[a][b + 1])
+				{
+					tmpboard[a][b + 1] = 'W';
+					count++;
+				}
+			}
+		}
+	}
+	return count;
+}
+
+int main(int argc, char *argv[])
+{
+	cin >> R >> C;
+
+	if (R<8 || R>50 || C<8 || C>50) //입력 예외 처리
+		return 0;
+
+	board = vector<vector<char>>(R, vector<char>(C, 0)); //입력 받을 백터
+	tmpboard = vector<vector<char>>(R, vector<char>(C, 0));//입력 받아서 한 개씩 테스트 해볼 백터, 이렇게 안해주면 원본이 손상됌
+
+	for (int i = 0; i < R; i++)
+	for (int j = 0; j < C; j++)
+	{
+		cin >> board[i][j];
+	}
+
+	for (int i = 0; i < R; i++)
+	for (int j = 0; j < C; j++)
+	{
+		copy(board.begin(), board.end(), tmpboard.begin());
+		result =min(result, min(searchWhite(i, j, tmpboard),searchBlack(i,j,tmpboard))); //0,0부터 행열이 8을 넘어가지 않는 선까지 테스트
+	}
+
+	cout << result << endl;
+}
+
