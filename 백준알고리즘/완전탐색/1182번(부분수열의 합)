@@ -1,0 +1,38 @@
+#include<iostream>
+
+using namespace std;
+
+int inputSize;
+int Sum;
+int result = 0;
+
+int search(int count, int valueArray[], int tmpSum)
+{
+	tmpSum += valueArray[count]; //4.더한 값이 내가 찾고자하는 Sum값과 같으면 밑에 if문에서 result +1
+
+	if (count >= inputSize) // 5.count를 넘을시 == 범위를 넘을시 종료. 기저함수 설정
+		return 0;
+
+	if (tmpSum == Sum)
+		result += 1;
+
+	search(count+1, valueArray, tmpSum - valueArray[count]); //6.재귀를 통해 더한 경우
+	search(count+1, valueArray, tmpSum); //7.재귀를 통한 안 더하는 경우
+										//8.모든 경우의 수 탐색 시작
+	return 0;
+}
+
+int main(int argc, char *argv[])
+{	
+	cin >> inputSize >> Sum;
+
+	int valueArray[20]; // 1.값들의 배열 입력
+
+	for (int i = 0; i < inputSize; i++) //2.입력 배열값 초기화
+		cin >> valueArray[i];
+
+	search(0, valueArray, 0); //3.탐색 시작
+	
+	cout << result << endl;
+	return 0;
+}
