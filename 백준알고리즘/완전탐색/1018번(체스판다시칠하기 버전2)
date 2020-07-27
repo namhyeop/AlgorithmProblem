@@ -1,0 +1,82 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int R, C;
+vector<vector<char>> board;
+vector<vector<char>> tmpboard;
+
+int result = numeric_limits<int>::max();
+
+string WhiteBoard[8] = {
+	{ "WBWBWBWB" },
+	{ "BWBWBWBW" },
+	{ "WBWBWBWB" },
+	{ "BWBWBWBW" },
+	{ "WBWBWBWB" },
+	{ "BWBWBWBW" },
+	{ "WBWBWBWB" },
+	{ "BWBWBWBW" }
+};
+
+string BlackBoard[8] = {
+	{ "BWBWBWBW" },
+	{ "WBWBWBWB" },
+	{ "BWBWBWBW" },
+	{ "WBWBWBWB" },
+	{ "BWBWBWBW" },
+	{ "WBWBWBWB" },
+	{ "BWBWBWBW" },
+	{ "WBWBWBWB" }
+};
+
+
+int WhiteBoardFirst(int i, int j)
+{
+	int count = 0;
+	for (int a = i; a < i + 8; a++)
+	for (int b = j; b < j + 8; b++)
+	if (board[a][b] != WhiteBoard[a - i][b - j])
+		count++;
+	return count;
+}
+
+int BlackBoardFirst(int i, int j)
+{
+	int count = 0;
+	for (int a = i; a < i + 8; a++)
+	for (int b = j; b < j + 8; b++)
+	if (board[a][b] != BlackBoard[a - i][b - j])
+		count++;
+	return count;
+}
+
+int main(int argc, char *argv[])
+{
+	cin >> R >> C;
+
+	if (R<8 || R>50 || C<8 || C>50) //입력 예외 처리
+		return 0;
+
+	board = vector<vector<char>>(R, vector<char>(C, 0)); //입력 받을 백터
+
+
+	for (int i = 0; i < R; i++)
+	for (int j = 0; j < C; j++)
+	{
+		cin >> board[i][j];
+	}
+
+	for (int i = 0; i + 7 < R; i++)
+	for (int j = 0; j + 7 < C; j++)
+	{
+		result = min(result, min(WhiteBoardFirst(i,j), BlackBoardFirst(i,j))); //0,0부터 행열이 경계선을 넘어가지 않는 선까지 테스트
+	}
+
+	cout << result << endl;
+
+	return 0;
+}
+
