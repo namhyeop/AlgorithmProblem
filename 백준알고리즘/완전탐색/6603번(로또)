@@ -1,0 +1,58 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int testCase;
+
+
+void check(int tmpArray[])
+{
+	for (int i = 0; i < 6; i++)
+	{
+		cout << tmpArray[i] << " ";
+	}
+	cout << endl;
+}
+void search(int tmpArray[] ,vector<int> &Array, int i, int j)
+{
+
+	if (j == 6)
+	{
+		check(tmpArray);
+		return;
+	}
+
+	for (int a = i; a < testCase; a++) //한 단계씩 커지면서 오름차순을 구성하게 된다
+	{
+		tmpArray[j] = Array[a];
+		cout << a << j << endl;
+		search(tmpArray, Array, a + 1, j + 1);
+		
+	}
+}
+
+int main(int argc, char*argv[])
+{	
+	
+	do
+	{
+		cin >> testCase;
+
+		vector<int> Array; 
+		int tmpArray[6];
+
+		for (int i = 0; i < testCase; i++)
+		{
+			int num;
+			cin >> num;
+			Array.push_back(num);
+		}
+		
+		search(tmpArray, Array, 0, 0);
+		cout << endl;
+	} while (testCase != 0);
+
+
+	
+}
