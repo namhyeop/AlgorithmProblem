@@ -1,0 +1,40 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+string reverse(string::iterator &it)
+{
+	char head = *it;
+	++it;
+
+	if (head == 'b' || head == 'w') //전체가 블랙이라면 b, 전체가 화이트라면 w, 그렇기에 최소로 쪼개지는 단위이며 아닐시 다음 노드에 x로 출력하고 다시 분해
+		return string(1, head);
+	string upperLeft = reverse(it); // 위에서 왼쪽 자리 -> 밑에서 왼쪽 자리로
+	string upperRight = reverse(it); // 위에서 오른쪽 자리 -> 밑에서 오른쪽 자리로
+	string lowerLeft = reverse(it); // 아래에서 왼쪽 자리 -> 위에서 왼쪽 자리로
+	string lowerRight = reverse(it); // 아래에서 오른쪽 자리 -> 위에서 오른쪽 자리로
+	//주석에 설명한대로 위치를 바꿔서 리턴해주면 정답!(항상 먼저 분할하니까 맨 앞 x출력은 고정)
+	return string("x") + lowerLeft + lowerRight + upperLeft + upperRight;
+
+}
+
+int main(int argc, char *argv[])
+{
+	int Testcase;
+	string input;
+	cin >> Testcase;
+
+	for (int i = 0; i < Testcase; i++)
+	{
+		cin >> input;
+
+		string::iterator it = input.begin();
+
+		cout << reverse(it) << endl;
+
+
+	}
+
+	return 0;
+}
