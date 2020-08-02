@@ -1,0 +1,59 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int solve(vector<int> &h, int left, int right)
+{
+	//기저사례: 판자를 다 분해한 경우
+	if (left == right)
+		return h[left];
+	//[left,mid],[mid +1, right]의 두 구간으로 문제를 분할한다.
+	int mid = (left + right) / 2;
+	//분할한 문제를 다시 재귀함수를 불러서 최대값을 갖는 사각형 구분
+	int result = max(solve(h, left, mid), solve(h, mid + 1, right));
+	//맨 밑까지 내려왔다면 지금부터는 사각형 중 가장 큰 것을 골라서 위에 함수에 반환
+	int low = mid, high = mid + 1;
+	int height = min(h[low], h[high]);
+	//[mid, mid+1]만 포함하는 너비 2인 사각형 고려한다.
+	result = max(result, height * 2);
+	//사각형이 입력 전체를 덮을 때까지 확장해 나간다.
+	while (left < low || high < right)
+	{
+		if (high < right && (low == left || h[low - 1] < h[high + 1]))
+		{
+			high++;
+			height = min(height, h[high]);
+		}
+		else
+		{
+			low--;
+			height = min(height, h[low]);
+		}
+		//확장 후 사각형의 넓이
+		result = max(result, height*(high - low + 1));
+	}
+	return result;
+}
+
+int main(int argc, char* argv[])
+{
+	int Testcase;
+	int num;
+	cin >> Testcase;
+	
+	if (Testcase <= 0 || Testcase > 50)
+		return 0;
+
+	for (int i = 0; i < Testcase; i++)
+	{
+		cin >> num;
+		vector<int> h(num, 0);
+		
+		for (int j = 0; j < num; j++)
+			cin >> h[j];
+
+		cout << solve(h, 0, h.size() - 1) << endl;
+	}
+
+}
