@@ -1,0 +1,27 @@
+#include<iostream>
+using namespace std;
+
+long long divide(int a, int b, int c)
+{
+	if (b == 0)
+		return 1;
+	
+	long long tmp = divide(a, b/2, c); //분할정복 실행
+
+	if ((b % 2) == 0)	// b가 짝수인 경우
+		return (tmp*tmp) % c;
+	else              // b가 홀수인 경우 -> 이유는 지수가 2의 제곱형식이 아니라면 그것을 한 개 빼서 곱해주고 제곱 형식으로 맞추어서 곱하기 count를 줄이는게 목적
+		return ((tmp*tmp) % c) * a % c;
+}
+
+int main(int argc, char *argv[])
+{
+	int a, b, c;
+	cin >> a;
+	cin >> b;
+	cin >> c;
+
+	cout << divide(a, b, c) << endl;
+
+	return 0;
+}
