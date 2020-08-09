@@ -1,0 +1,61 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int search(vector<int> &v, int left, int right)
+{
+	if (left == right)
+		return v[left];
+
+	int mid = (left + right) / 2;
+	int result = max(search(v, left, mid), search(v, mid + 1, right));
+	int low = mid;
+	int high = mid + 1;
+	int height = min(v[low], v[high]);
+	result = max(result, height * 2);
+	while (left < low || high < right)
+	{
+		if (high < right && ((low == left) || v[low - 1] < v[high+1]))
+		{
+			high++;
+			height = min(height, v[high]);
+		}
+		else
+		{
+			low--;
+			height = min(height, v[low]);
+
+		}
+		result = max(result, height*(high - low+1));
+	}
+
+	return result;
+}
+
+int main(int argc, char *argv[])
+{
+	int Num;
+	cin >> Num;
+
+	
+	if (1 > Num || Num > 100000)
+		return 0;
+	
+	vector<int>v(Num, 0);
+
+	for (int i = 0; i < Num; i++)
+	{
+		cin >> v[i];
+		
+		
+		if (v[i] >1000000000 || v[i] < 0)
+			return 0;
+		
+	}
+
+	cout << search(v, 0, v.size() -1) << endl;
+
+	return 0;
+}
