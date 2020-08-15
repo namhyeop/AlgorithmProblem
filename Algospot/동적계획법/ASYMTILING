@@ -5,6 +5,7 @@ const int MOD = 1000000007;
 
 int cache[101];
 
+//타일들의 갯수를 세는 함수
 int tiling(int width)
 {
 	if (width <= 1)
@@ -13,7 +14,7 @@ int tiling(int width)
 	int &ret = cache[width];
 	if (ret != -1)
 		return ret;
-
+//가로로 2개를 놔둘것인가 1개를 놔둘것인가의 모든 경우의 수
 	return ret = (tiling(width - 2) + tiling(width - 1)) % MOD;
 }
 
@@ -25,7 +26,7 @@ int asymmetric(int width)
 
 	int ret = tiling(width);
 
-	ret = (ret - tiling(width / 2) + MOD) % MOD;
+	ret = (ret - tiling(width / 2) + MOD) % MOD; //음수결과 방지를 위한 MOD 먼저 더해주기
 	ret = (ret - tiling(width / 2 - 1) + MOD) % MOD;
 	return ret;
 }
@@ -36,9 +37,10 @@ int asymmetric(int width)
 		return 0;
 	int& ret = cache2[width];
 	if(ret!= -1) return ret;
-	ret = (ret+asymmetric2(width-4)) % MOD;
-	ret = (ret+asymmetrice2(width-3)) % MOD;
-	ret = (ret+asyymetrice2(width-3)) % MOD;
+	ret = asymmetric(width -2) % MOD; //양끝에 세로벽돌(가로 사이즈 =1)을 2개 둘 경우 
+	ret = (ret+asymmetric2(width-4)) % MOD;//양끝에 가로벽돌을(가로 사이즈 =2) 2개 둘 경우
+	ret = (ret+asymmetric2(width-3)) % MOD;//남은 공간을 세로벽돌 1개,가로벽돌1개로 채우는 경우
+	ret = (ret+asyymetric2(width-3)) % MOD;//남은 공간을 가로벽돌 1개,세로벽돌1개로 채우는 경우
 	return ret;
 }*/
 
