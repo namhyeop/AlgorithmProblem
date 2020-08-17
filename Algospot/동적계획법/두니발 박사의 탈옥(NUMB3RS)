@@ -1,0 +1,113 @@
+#include<iostream>
+#include<vector>
+#include<cstring>
+using namespace std;
+
+int n, d, p, q;
+// n=마을의 수, d = 날짜
+// p = 교도소 번호(그림의 동그라미 2개표시)
+// q = 마을의 갯수
+
+int connected[51][51];
+int deg[51];
+double cache[51][101];
+//connected[i][j] = 마을 i,j가 연결되어 있나 여부
+//dei[i] = 마을 i와 연결된 마을의 개수
+
+/*완전탐색기법
+double search(vector<int> &path)
+{
+	//기저 사례: d일이 지난 경우
+	if (path.size() == d + 1)
+	{
+		//이 시나리오가 q에서 끝나지 않는다면 무효
+		if (path.back() != q)
+			return 0.0;
+		//path의 출현 확률 계산
+		double ret = 1.0;
+		for (int i = 0; i+1 < path.size(); i++)
+			ret /= deg[path[i]];
+		return ret;
+	}
+	double ret = 0;
+	//경로의 다음 위치를 결정한다.
+	for (int there = 0; there < n; ++there)
+		if (connected[path.back()][there])
+		{
+			path.push_back(there);
+			ret += search(path);
+			path.pop_back();
+		}
+		return ret;
+}
+*/
+
+double search3(int here, int days)
+{
+	//기저사례: 0일째
+	if (days == 0) return (here == p ? 1.0 : 0.0);
+	//메모이제이션
+	double &ret = cache[here][days];
+	if (ret > -0.5) return ret;
+	ret = 0.0;
+	for (int there = 0; there < n; there++)
+	if (connected[here][there])
+		ret += search3(there, days - 1) / deg[there];
+	return ret;
+}
+
+int main(int argc, char*argv[])
+{
+	int Testcase;
+	cin >> Testcase;
+	if (Testcase < 1 || Testcase > 50)
+		return 0;
+
+	for (int i = 0; i < Testcase; i++)
+	{
+		vector<int> v;
+
+		cin >> n;
+		cin >> d;
+		cin >> p;
+		if (n < 2 || n> 50)
+			return 0;
+		if (d < 1 || d > 100)
+			return 0;
+		if (p < 0 || p >= n)
+			return 0;
+
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			cin >> connected[i][j];
+
+		for (int i = 0; i < 51; i++)
+		for (int j = 0; j < 101; j++)
+			cache[i][j] = -1;
+
+		memset(deg, 0, sizeof(deg));
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			deg[i] += connected[i][j];
+		
+		
+		cin >> q;
+		if (q > n || q < 1)
+			return 0;
+		
+		for (int i = 0; i < q; i++)
+		{
+			int num;
+			cin >> num;
+			v.push_back(num);
+		}
+
+		for (int i = 0; i < q; i++)
+		{
+			printf("%.8lf ", search3(v[i],d));
+		}
+		cout << endl;
+	}
+	
+	return 0;
+}
