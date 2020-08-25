@@ -1,0 +1,46 @@
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+
+int cache[1000001];
+
+int search(int value)
+{
+	int &ret = cache[value];
+
+	if (ret != -1)
+		return ret;
+	
+	if (value <=1)
+		return ret;
+
+	int tmp = 987654321;
+
+	if (value % 3 == 0)
+		tmp = min(tmp, search(value / 3));
+	if (value % 2 == 0)
+		tmp = min(tmp,search(value / 2));
+	tmp = min(tmp, search(value - 1));
+
+	return ret = tmp +1;
+
+}
+
+int main(int argc, char * argv[])
+{
+	
+	
+	int n;
+	cin >> n;
+
+	memset(cache, -1, sizeof(cache));
+	cache[0] = 0;
+	cache[1] = 0;
+	
+
+	cout << search(n) << endl;
+
+	return 0;
+
+}
