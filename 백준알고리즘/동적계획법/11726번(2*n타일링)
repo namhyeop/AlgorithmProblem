@@ -15,7 +15,7 @@ int search(int width)
 	if (ret != -1)
 		return ret;
 
-	return ret = (search(width - 1) + search(width - 2) + search(width-2)) % 10007;
+	return ret = (search(width - 1) + search(width - 2)) % 10007;
 }
 
 int main(int argc, char*argv[])
