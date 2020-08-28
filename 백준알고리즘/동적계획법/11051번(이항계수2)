@@ -1,0 +1,31 @@
+#include<iostream>
+#include<cstring>
+
+using namespace std;
+
+int cache[1001][1001];
+int mod = 10007;
+int search(int n, int k)
+{
+	for (int i = 1; i <= n; i++)
+	for (int j = 0; j <= k; j++)
+	{
+		if (i == j || j == 0)
+			cache[i][j] = 1;
+		else
+		cache[i][j] = (cache[i - 1][j - 1] + cache[i - 1][j]) % mod;
+	}
+
+	return cache[n][k];
+}
+
+int main(int argc, char * argv[])
+{
+	int n,k;
+	cin >> n >> k;
+	
+	memset(cache, 0, sizeof(cache));
+	cout << search(n, k) << endl;
+	
+	return 0;
+}
