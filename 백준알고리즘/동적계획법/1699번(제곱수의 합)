@@ -1,0 +1,44 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+#include<cmath>
+using namespace std;
+
+int n;
+int maxI = 1;
+int psSum[100001];
+
+int search(int sum)
+{
+	for (int i = 2; i < 100001; i++)
+	{
+		if (psSum[i] == 1)
+			continue;
+		int result = 987654321;
+		for (int j = (int)sqrt(i); j >= 1; j--)
+		{
+			int cnt = 1 + psSum[i - (j*j)];
+			if (result > cnt)
+			{
+				result = cnt;
+				psSum[i] = result;
+			}
+		}
+	}
+
+	return psSum[n];
+}
+
+int main(int argc, char*argv[])
+{
+	cin >> n;
+	memset(psSum, 0, sizeof(psSum));
+	while (maxI*maxI <= n)
+	{
+		psSum[maxI] = maxI * maxI;
+		maxI++;
+	}
+	cout << search(n) << endl;
+
+	return 0;
+}
