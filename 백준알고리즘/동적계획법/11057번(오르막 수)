@@ -1,0 +1,44 @@
+#include<iostream>
+#include<cstring>
+
+using namespace std;
+
+int mod = 10007;
+int cache[1001][10];
+//i = 열의 위치 ex: cache[n][i] n행 i열의 배열을 채우겠다.
+int write(int n, int i)
+{
+	int &ret = cache[n][i];
+	
+	if (ret != -1)
+		return ret;
+
+	ret = 0;
+
+	for (int nexti = i; nexti < 10; nexti++)
+		ret += write(n - 1, nexti) % mod;
+
+	return ret;
+}
+
+int main(int argc, char*argv[])
+{
+	int n;
+	int sum = 0;
+	cin >> n;
+
+	memset(cache, -1, sizeof(cache));
+
+	for (int i = 0; i < 10; i++)
+		cache[1][i] = 1;
+
+	for (int i = 0; i < 10; i++)
+		write(n, i);
+
+	for (int i = 0; i < 10; i++)
+		sum = (sum + cache[n][i]) % mod;
+
+	cout << sum << endl;
+	
+	return 0;
+}
