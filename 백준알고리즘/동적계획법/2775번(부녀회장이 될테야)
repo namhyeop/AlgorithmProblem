@@ -1,0 +1,50 @@
+#include<iostream>
+#include<cstring>
+#include<vector>
+
+using namespace std;
+
+int cache[15][15];
+int k;
+int n;
+
+int search(int k, int n)
+{
+	int &ret = cache[k][n];
+
+	if (ret != 0)
+		return ret;
+
+	ret = search(k - 1, n);
+
+	if (n != 1)
+		ret += cache[k][n - 1];
+
+	return ret;
+}
+
+int main(int argc, char*argv[])
+{
+	int Testcase;
+	cin >> Testcase;
+
+	memset(cache, 0, sizeof(cache));
+
+	for (int n = 1; n <= 14; n++)
+		cache[0][n] = n;
+
+	for (int i = 0; i < Testcase; i++)
+	{
+		cin >> k;
+		cin >> n;
+		int sum = 0;
+
+		for (int start = 1; start <= n; start++)
+			search(k, start);
+
+		sum = cache[k][n - 1] + cache[k - 1][n];
+		cout << sum << endl;
+	}
+
+	return 0;
+}
