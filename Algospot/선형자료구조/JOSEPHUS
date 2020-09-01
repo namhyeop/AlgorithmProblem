@@ -1,0 +1,47 @@
+#include<iostream>
+#include<list>
+using namespace std;
+
+void josephus(int n, int k)
+{
+	//리스트를 준비한다.
+	list<int> survivors;
+	for (int i = 1; i <= n; i++)
+		survivors.push_back(i);
+
+	//가장 처음에 있는 대상이 죽는다. iterator를 사용해서 지정해준다
+	list<int>::iterator kill = survivors.begin();
+
+	while (n>2)
+	{
+		//첫 번째 사람이 자살한다. erase()는 그 위치의 원소를 지우고 지운거 뒤에서부터 다 땡겨서 정렬함
+		kill = survivors.erase(kill); //literator 위치를 증가 시켜줬는데 끝이 나있는 지점이면 반환할때 이상한 값 반환되서 begin으로 처음으로 반환, 원형리스트를 생각하면 쉽게 이해 가능
+		if (kill == survivors.end())
+			kill = survivors.begin();
+		--n;
+
+		//k-1번 다음 사람으로 옮긴다.
+		for (int i = 0; i < k - 1; i++)
+		{
+			kill++;
+			if (kill == survivors.end()) //위에서 literator 위치를 증가 시켜줬는데 끝이 나있는 지점이면 반환할때 이상한 값 반환되서 begin으로 처음으로 반환, 원형리스트를 생각하면 쉽게 이해 가능
+				kill = survivors.begin();
+		}
+	}
+	cout << survivors.front() <<" "<< survivors.back() << endl;
+}
+
+int main(int argc, char *argv[])
+{
+	int Testcase;
+	cin >> Testcase;
+
+	for (int i = 0; i < Testcase; i++)
+	{
+		int n, k;
+		cin >> n >> k;
+
+		josephus(n, k);
+	}
+	return 0;
+}
