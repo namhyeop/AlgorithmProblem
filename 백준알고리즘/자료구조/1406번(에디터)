@@ -1,0 +1,68 @@
+#include<iostream>
+#include<stack>
+#include<string>
+using namespace std;
+
+int main(int argc, char *argv[])
+{
+	stack<char> left, right;
+
+	int num;
+	string input;
+	cin >> input;
+	cin >> num;
+	for (int i = 0; i < input.size(); i++)
+		left.push(input[i]);
+
+	while (num != 0)
+	{
+		char command;
+		cin >> command;
+		
+		if (command == 'L')
+		{
+			if (left.size() != 0)
+			{
+				right.push(left.top());
+				left.pop();
+			}
+		}
+
+		else if (command == 'D')
+		{
+			if (right.size() != 0)
+			{
+				left.push(right.top());
+				right.pop();
+			}
+		}
+
+		else if (command == 'B')
+		{
+			if (left.size() != 0)
+				left.pop();
+		}
+		else
+		{
+			char inputB;
+			cin >> inputB;
+			left.push(inputB);
+		}
+		num--;
+	}
+
+	int a = left.size();
+	for (int i = 0; i < a; i++)
+	{
+		right.push(left.top());
+		left.pop();
+	}
+
+	int b = right.size();
+	for (int i = 0; i < b; i++)
+	{
+		cout << right.top();
+		right.pop();
+	}
+
+}
