@@ -1,0 +1,47 @@
+#include<iostream>
+#include<vector>
+#include<list>
+
+//1.iterator을 활용하여 커서를 k만큼 이동시킨 후 erase를 사용하여 삭제하고 
+//한 칸씩 list를 땡겨와서 1 과정을 반복한다.  
+using namespace std;
+vector<int> v;
+void search(int n, int k)
+{
+	list<int> li;
+
+	for (int i = 1; i <= n; i++)
+		li.push_back(i);
+		
+	list<int>::iterator kill = li.begin();
+
+	for (int i = n; i > 0; i--)
+	{
+		for (int i = 0; i < k - 1; i++)
+		{
+			kill++;
+			if (kill == li.end()) //올릴 때마다 end값이면 처음 값으로 돌려서 원형리스트처럼 만들어주었다.
+				kill = li.begin();
+		}
+		v.push_back(*kill); //list값이라 포인터로 값 가져와야 함
+		kill = li.erase(kill);
+
+		if (kill == li.end())//erase로 end값이 반환되면 처음 값으로 돌려서 원형리스트처럼 만들어주었다.
+			kill = li.begin();
+	}
+	
+}
+
+int main(int argc, char *argv[])
+{
+	int n, k,i;
+	
+	cin >> n >> k;
+	
+	search(n, k);
+
+	cout << "<";
+	for (i = 0; i < v.size()-1; i++)
+		cout << v[i] <<", " ;
+	cout << v[i]<<">" << endl;
+}
