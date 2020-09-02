@@ -1,0 +1,50 @@
+#include<iostream>
+#include<list>
+#include<utility>
+using namespace std;
+int n;
+
+void search()
+{
+	list<pair<int,int>> li;
+
+	for (int i = 1; i <= n; i++)
+	{
+		int tmp;
+		cin >> tmp;
+		li.push_back({ i, tmp });
+	}
+
+	while (li.size() != 1) //1개 남을때까지 반복해서 뽑아주겠다.
+	{
+		cout << li.front().first << " ";
+		int paper = li.front().second;
+		li.erase(li.begin());
+
+		if (paper >= 0)
+		{
+			for (int i = 0; i < paper - 1; i++)
+			{
+				li.push_back(li.front());
+				li.erase(li.begin());
+			}
+		}
+		else
+		{
+			for (int i = 0; i < abs(paper); i++)
+			{
+				li.push_front(li.back());
+				li.pop_back();
+			}
+		}
+	}
+	cout << li.front().first << " " << endl; //1개 남은
+}
+
+int main(int argc, char *argv[])
+{
+	cin >> n;
+
+	search();
+	return 0;
+}
