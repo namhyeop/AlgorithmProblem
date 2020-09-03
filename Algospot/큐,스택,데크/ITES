@@ -1,0 +1,62 @@
+#include<iostream>
+#include<queue>
+
+using namespace std;
+
+int k, n;
+
+struct RNG
+{
+	unsigned seed;
+	RNG() : seed(1983)
+	{
+	}
+	unsigned next()
+	{
+		unsigned result = seed;
+		seed = ((seed * 214013u) + 2531011u); //A[0] ~ A[i] seed를 계속 바꿔줌
+		return result % 10000 + 1;
+	}
+};
+
+int countRanges(int k, int n)
+{
+	RNG rng;
+	queue<int> range;
+	
+	int ret = 0;
+	int rangeSum = 0;
+	//구간에 숫자를 추가한다.
+	for (int i = 0; i < n; i++)
+	{
+		int newSignal = rng.next();
+		rangeSum += newSignal;
+		range.push(newSignal); //1.이런식으로 초과하기전까지 더해준 다음
+		
+		//구간의 합이 k를 초과하는 동안 구간에서 숫자를 뺀다
+		while (rangeSum > k)
+		{
+			rangeSum -= range.front();
+			range.pop();//2.맨앞에서 뽑아주면 tail은 그대로 있고 head만 변함
+		}
+		//초과되기전에 삽입한 걸 빼준것이 k랑 같다면 그건 우리가 찾던 부분수열이다.
+		if (rangeSum == k)
+			ret++;
+	}
+	return ret;
+}
+
+
+int main(int argc, char * argv[])
+{
+	int Testcase;
+	cin >> Testcase;
+
+	for (int i = 0; i < Testcase; i++)
+	{
+		cin >> k >> n; 
+		cout << countRanges(k, n) << endl;
+	}
+
+	return 0;
+}
