@@ -1,0 +1,166 @@
+#include<iostream>
+#include<cstdlib>
+#include<string>
+
+using namespace std;
+
+class UnderflowException {};
+
+
+//ㅁ| ->아직 생성x 초기상태
+//h
+//t
+//요런 느낌으로 시작하는거임
+
+//리스트를 활용해서 큐를 구성할것임
+template<typename T>
+class ListNode{
+public:
+	T value;
+	//마지막 노드일 경우 nullptr
+	ListNode<T> *next;
+
+	//생성자
+	ListNode<T>() : next(nullptr){}
+	ListNode<T>(T value1, ListNode<T> * next1) : value(value1), next(next1){}
+};
+
+template<typename T>
+class Queue{
+public:
+	int size;
+	ListNode<T> *head, *tail;
+
+	//생성자 
+	Queue<T>() : size(0), head(nullptr), tail(nullptr){}
+
+	//소멸자
+	~Queue<T>()
+	{
+		ListNode<T> *t1 = head, *t2;
+		while (t1 != nullptr)
+		{
+			t2 = t1->next;
+			delete t1;
+			t1 = t2;
+		}
+	}
+
+	void push(T value) //맨 뒤에 새 원소 삽입
+	{
+		//큐가 비어 있었을 경우
+		if (size == 0)
+			head = tail = new ListNode<T>(value, nullptr);
+		//나머지
+		else
+		{
+			tail->next = new ListNode<T>(value, nullptr);
+			tail = tail->next;
+		}
+		size++;
+	}
+
+	T front()
+	{
+		try
+		{
+			if (size == 0)
+				throw UnderflowException();
+
+			return head->value;
+		}
+		//오류를 출력할때는 cerr을 사용해서 오류출력, 출력하고 바로 버퍼를 비운다.
+		catch (UnderflowException e)
+		{
+			//cerr << "큐가 비어 있으므로 front연산은 불가능하다." << endl;
+			//exit(1);
+			return -1;
+		}
+
+		
+	}
+	
+	T back()
+	{
+		try
+		{
+			if (size == 0)
+				throw UnderflowException();
+
+			return tail->value;
+		}
+		catch (UnderflowException e)
+		{
+			return -1;
+		}
+	}
+
+	void pop()
+	{
+		try{
+			if (size == 0)
+				throw UnderflowException();
+
+			cout << head->value << endl;
+
+			ListNode<T> *temp = head;
+			head = head->next;
+			delete temp;
+			if (head == nullptr)
+				tail = nullptr;
+			size--;
+		}
+		catch (UnderflowException e)
+		{
+			cout << "-1" << endl;
+			//cerr << " 큐가 비어 있으므로 pop 연산은 불가능하다." << endl;
+			//exit(2);
+		}
+	}
+};
+
+
+int main(int argc, char*argv[])
+{
+	Queue<int> q;
+	int Testcase;
+	cin >> Testcase;
+
+	for (int i = 0; i < Testcase; i++)
+	{
+
+		string input;
+		cin >> input;
+		if (input == "push")
+		{
+			long long n;
+			cin >> n;
+			q.push(n);
+		}
+		else if (input == "pop")
+		{
+			q.pop();
+		}
+		else if (input == "size")
+		{
+			cout << q.size << endl;
+		}
+		else if (input == "empty")
+		{
+			if (q.size == 0)
+				cout << "1" << endl;
+			else
+				cout << "0" << endl;
+		}
+		else if (input == "front")
+		{
+			cout << q.front() << endl;
+		}
+		else if (input == "back")
+		{
+			cout << q.back() << endl;
+		}
+	}
+
+	return 0;
+}
