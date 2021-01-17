@@ -71,3 +71,73 @@ int main(int argc, char * argv[])
 
 	return 0;
 }
+
+/*vector 사용으로 인한 시간 초과
+#include<iostream>
+#include<queue>
+#include<vector>
+#define MAX 100001
+
+using namespace std;
+
+int N;
+int K;
+bool visited[MAX];
+
+void BFS(int N, vector<int> v)
+{
+	queue<pair<int, vector<int>>> q;
+	visited[N] = true;
+	q.push({ N, v });
+
+	while (!q.empty())
+	{
+		int curValue = q.front().first;
+		vector<int> curv = q.front().second;
+		q.pop();
+
+		if (curValue == K)
+		{
+			cout << curv.size() - 1 << "\n";
+			for (int i = 0; i < curv.size(); i++)
+				cout << curv[i] << " ";
+			break;
+		}
+
+		if (curValue + 1 < MAX && !visited[curValue + 1])
+		{
+			curv.push_back(curValue + 1);
+			q.push({ curValue + 1, curv });
+			curv.pop_back();
+			visited[curValue + 1] = true;
+		}
+		if (curValue - 1 >= 0 && !visited[curValue - 1])
+		{
+			curv.push_back(curValue - 1);
+			q.push({ curValue - 1, curv });
+			curv.pop_back();
+			visited[curValue - 1] = true;
+		}
+		if (curValue * 2 < MAX && !visited[curValue * 2])
+		{
+			curv.push_back(curValue * 2);
+			q.push({ curValue * 2, curv });
+			curv.pop_back();
+			visited[curValue * 2] = true;
+		}
+	}
+}
+int main(int argc, char * argv[])
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> N >> K;
+	vector<int> v;
+	v.push_back(N);
+	BFS(N, v);
+
+	return 0;
+}
+*/
