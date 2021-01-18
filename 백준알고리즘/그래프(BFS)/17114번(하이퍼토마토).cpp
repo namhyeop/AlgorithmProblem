@@ -19,7 +19,7 @@ namespace __I11__
 		return in;
 	}
 
-	int to_int(i11& x)
+	int to_int(i11& x)//1차원으로 다시 
 	{
 		int ret = 0;
 		for (int i = 0; i < 11; i++)
@@ -30,7 +30,7 @@ namespace __I11__
 		return ret;
 	}
 
-	i11 to_i11(int x)
+	i11 to_i11(int x) //11차원으로 다시 바꿔주는 경우
 	{
 		i11 ret;
 		for (int i = 10; i >= 0; i--)
@@ -71,10 +71,10 @@ int main(int argc, char *argv[])
 		for (int t = 0; t < 2; t++)
 		{
 			auto next = cur;
-			next[i] += t ? 1 : -1;
+			next[i] += t ? 1 : -1; //+1인경우, -1인경우
 			if (next[i] < 0 || next[i] >= I[i])
 				continue;
-			if (board[to_int(next)])
+			if (board[to_int(next)]) //이미 토마토라면 건너 뛰어야함
 				continue;
 			board[to_int(next)] = board[to_int(cur)] + 1;
 			Q.push(to_int(next));
@@ -97,3 +97,20 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+/*
+vector<pair<int, int>> adj[100][100];
+vector<int> adj[100 * 100];
+
+adj[i][j].push_back({ nx, ny });
+
+adj[i * m + j].push_back({ nx * m + ny }); 
+cur;
+
+11차원인 경우 찾아주는 구현법
+x = cur / m;
+y = cur % m;
+
+1차원으로 만들었을 경우 찾아주는 구현법
+i * m +j
+*/
+
