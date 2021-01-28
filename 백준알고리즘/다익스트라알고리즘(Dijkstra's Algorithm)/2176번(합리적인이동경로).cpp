@@ -1,19 +1,14 @@
-#include<iostream>
-#include<vector>
-#include<queue>
-#include<climits>
+#include<bits/stdc++.h>
 #define MAX 1001
 using namespace std;
 
-int board[MAX][MAX];
-int N;
-int M;
+int N,M;
 int dp[MAX];
 int cost[MAX];
 vector<pair<int, int>> v[MAX];
 priority_queue<pair<int, int>> pq;
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv)
 {
 	cin >> N >> M;
 	for (int i = 0; i < M; i++)
@@ -24,24 +19,25 @@ int main(int argc, char *argv[])
 		v[node2].push_back({ node1, value });
 	}
 	fill(cost + 1, cost + 1 + N, INT_MAX);
+
 	cost[2] = 0;
 	dp[2] = 1;
 	pq.push({ 0, 2 });
 
-	//pq.first == 길이
-	//pq.second == node;
-	int a = 0;
-	while (!pq.empty())
+	while (pq.empty())
 	{
+		//pq의 first는 길이
+		//pq의 second는 노드
 		int h = pq.top().second;
 		int distance = -pq.top().first;
 		pq.pop();
 
-		int tmp1 = cost[h] ^ distance;
-		if (cost[h] ^ distance)
+		if (cost[h] != distance)
 			continue;
-		//distance는 이전길
-		//idx.second는 이번 노드
+
+		//입력값과 연관
+		//idx.first == node
+		//idx.second == length
 		for (auto idx : v[h])
 		{
 			int idxDistance = idx.second + distance;
@@ -50,13 +46,12 @@ int main(int argc, char *argv[])
 				cost[idx.first] = idxDistance;
 				pq.push({ -idxDistance, idx.first });
 			}
-			//이번 비용이 이전 비용보다 적다면 dp 기록
 			if (cost[idx.first] < distance)
 				dp[h] += dp[idx.first];
 		}
-		a++;
 	}
 
 	cout << dp[1] << "\n";
+
 	return 0;
 }
