@@ -1,47 +1,43 @@
-#include<iostream>
-#include<algorithm>
-#include<cstring>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-int n;// 물건의 갯수
-int k;// 물건을 담을수 있는 최대 무게
-int w[101];// 물건의 무게
-int v[101];// 물건의 값어치
-int cache[101][100001];
+int n; //물건의 갯수
+int k; //물건을 담을수 있는 최대 무게
+int w[101];//물건의 무게
+int v[101];// 물건의 갯수
+int cache[101][1000001];
 
-//backCode = 무게와 값들의 위치들을 의미함
-//modk = 남은 가방 중량
-int search(int backCode, int modk)
+int search(int bagCode, int modk)
 {
-	if (backCode < 0)
+	if (bagCode < 0)
 		return 0;
 
-	int &ret = cache[backCode][modk];
-
+	int &ret = cache[bagCode][modk];
+	
 	if (ret != 0)
 		return ret;
-	
-	if (modk < w[backCode])
-		return search(backCode - 1, modk);
-	
-	return ret = max(search(backCode - 1, modk - w[backCode]) + v[backCode], search(backCode - 1, modk));
+
+	if (modk < w[bagCode]) // 담을수없는경우
+		return search(bagCode - 1, modk);
+
+	//담는 경우와 담지 않는 경우
+	return ret = max(search(bagCode - 1, modk - w[bagCode]) + v[bagCode], search(bagCode - 1, modk));
+
 }
-int main(int argc, char * argv[])
+int main(int argc, char *argv[])
 {
 	int result;
 	cin >> n >> k;
 
-	//memset(cache, 0, sizeof(cache));
 	for (int i = 0; i < n; i++)
 	{
 		cin >> w[i];
 		cin >> v[i];
 	}
+	result = search(n - 1, k);
 
-	//for (int backCode = 0; backCode < n; backCode++)
-		result = search(n-1, k);
-	
-	cout << result << endl;
+	cout << result << "\n";
 
 	return 0;
 }
