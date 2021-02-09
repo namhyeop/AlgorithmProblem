@@ -119,3 +119,111 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+/*
+조합론을 활용한 풀이
+#include<bits/stdc++.h>
+#define MAX 10
+using namespace std;
+
+int board1[MAX][MAX];
+int board2[MAX][MAX];
+int n, m;
+int moveY[] = { -1, 0, 1, 0 };
+int moveX[] = { 0, 1, 0, -1 };
+vector<pair<int, int>> cctv;
+
+
+bool isValid(int y, int x)
+{
+	if (y >= 0 && y < n && x >= 0 && x < m)
+		return true;
+	return false;
+}
+void upd(int y, int x, int dir)
+{
+	dir %= 4;
+	while (1)
+	{
+		y += moveY[dir];
+		x += moveX[dir];
+		if (!isValid(y, x) || board2[y][x] == 6)
+			return;
+		if (board2[y][x] != 0)
+			continue;
+		board2[y][x] = 7;
+	}
+}
+
+int main(void)
+{
+	cin >> n >> m;
+
+	int mn = 0;
+
+	for (int i = 0; i < n; i++)
+	for (int j = 0; j < m; j++)
+	{
+		cin >> board1[i][j];
+		if (board1[i][j] != 0 && board1[i][j] != 6)
+			cctv.push_back({ i, j });
+		if (board1[i][j] == 0)
+			mn++;
+	}
+
+	for (int tmp = 0; tmp < (1 << (2 * cctv.size())); tmp++)
+	{
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			board2[i][j] = board1[i][j];
+		int brute = tmp;
+
+		for (int i = 0; i < cctv.size(); i++)
+		{
+			int dir = brute % 4;
+			brute /= 4;
+			int y = cctv[i].first;
+			int x = cctv[i].second;
+
+			if (board1[y][x] == 1)
+			{
+				upd(y, x, dir);
+			}
+			else if (board1[y][x] == 2)
+			{
+				upd(y, x, dir);
+				upd(y, x, dir + 2);
+			}
+			else if (board1[y][x] == 3)
+			{
+				upd(y, x, dir);
+				upd(y, x, dir + 1);
+			}
+			else if (board1[y][x] == 4)
+			{
+				upd(y, x, dir);
+				upd(y, x, dir + 1);
+				upd(y, x, dir + 2);
+			}
+			else
+			{
+				upd(y, x, dir);
+				upd(y, x, dir + 1);
+				upd(y, x, dir + 2);
+				upd(y, x, dir + 3);
+			}
+		}
+
+		int ret = 0;
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		if (board2[i][j] == 0)
+			ret++;
+
+		mn = min(mn, ret);
+	}
+	cout << mn;
+	
+	return 0;
+}
+*/
