@@ -1,3 +1,28 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+const int MAX = 1001;
+int cache[MAX];
+int arr[MAX];
+int n;
+
+void solve()
+{
+	for (int i = 1; i <= n; i++)
+	for (int j = 1; j <= i; j++)
+		cache[i] = max(cache[i], cache[i - j] + arr[j]);
+}
+int main()
+{
+	cin >> n;
+
+	for (int i = 1; i <= n; i++)
+		cin >> arr[i];
+
+	solve();
+	cout << cache[n];
+}
+/*
 #include<iostream>
 #include<algorithm>
 #include<cstring>
@@ -38,3 +63,4 @@ int main(int argc, char * argv[])
 	cout << search(0) << endl;
 
 }
+*/
