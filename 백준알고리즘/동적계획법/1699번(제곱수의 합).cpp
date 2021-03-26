@@ -1,3 +1,39 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+const int MAX = 1e5 + 1;
+int cache[MAX]; //어떤 자연수 N을 제곱수의 합으로 나타날 때 항의 최소 개수
+
+int main()
+{
+	int n;
+	cin >> n;
+	
+	for (int i = 0; i <= n; i++)
+		cache[i] = i;
+
+	for (int i = 1; i <= n; i++)
+	for (int j = 1; j*j <= i; j++)
+	{
+		cache[i] = min(cache[i], cache[i - j*j] + 1);
+		
+		/*
+		cout << i << " " << j << "\n";
+		for (int a = 0; a <= n; a++)
+		{
+			cout << cache[a] << " ";
+
+		}
+		cout << "\n";
+		cout << "-----------------------";
+		cout << "\n";
+		*/
+		
+	}
+	cout << cache[n] << "\n";
+}
+
+/*
 #include<iostream>
 #include<algorithm>
 #include<cstring>
@@ -42,3 +78,4 @@ int main(int argc, char*argv[])
 
 	return 0;
 }
+*/
