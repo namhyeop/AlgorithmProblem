@@ -1,3 +1,39 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int cache[2][100001];
+int arr[2][100001];
+int Testcase;
+int main()
+{
+	cin >> Testcase;
+
+	for (int i = 0; i < Testcase; i++)
+	{
+		int width;
+		cin >> width;
+		int maxValue;
+
+		for (int i = 0; i < 2; i++)
+		for (int j = 0; j < width; j++)
+			cin >> arr[i][j];
+		
+		cache[0][0] = arr[0][0];
+		cache[1][0] = arr[1][0];
+		cache[0][1] = arr[0][1] + cache[1][0];
+		cache[1][1] = arr[1][1] + cache[0][0];
+		
+		for (int i = 2; i < width; i++)
+		{
+			cache[0][i] = arr[0][i] + max(cache[1][i - 1], cache[1][i -2]);
+			cache[1][i] = arr[1][i] + max(cache[0][i - 1], cache[0][i - 2]);
+		}
+
+		cout << max(cache[0][width -1], cache[1][width - 1]) << '\n';
+	}
+}
+/*
 #include<iostream>
 #include<algorithm>
 using namespace std;
@@ -51,3 +87,4 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+*/
