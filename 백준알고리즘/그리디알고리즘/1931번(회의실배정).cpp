@@ -1,3 +1,37 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+const int MAX = 1e5 + 1;
+
+pair<int,int> arr[MAX];
+int n;
+
+int main(void)
+{
+	cin >> n;
+
+	for (int i = 0; i < n; i++)
+		cin >> arr[i].second >> arr[i].first;
+
+	sort(arr, arr + n);
+
+	int ret = 0;
+	int cur = 0;
+	for (int i = 0; i < n; i++)
+	{
+		if (cur > arr[i].second)
+			continue;
+
+		ret++;
+		cur = arr[i].first;
+	}
+	
+	cout << ret << "\n";
+
+	return 0;
+}
+
+/*
 #include<iostream>
 #include<vector>
 #include<algorithm>
@@ -49,3 +83,4 @@ int main(int argc, char *argv[])
 	cout << count;
 
 }
+*/
