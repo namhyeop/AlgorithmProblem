@@ -1,3 +1,22 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int n, k, ret;
+int arr[11];
+int main()
+{
+	cin >> n >> k;
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+	for (int i = n - 1; i >= 0; i--)
+	{
+		ret += k / arr[i];
+		k %= arr[i];
+	}
+	cout << ret << "\n";
+}
+/*
 #include<iostream>
 using namespace std;
 
@@ -26,3 +45,4 @@ int main(int argc, char *argv[])
 	
 	cout << count << endl;
 }
+*/
