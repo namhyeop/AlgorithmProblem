@@ -1,3 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int ret; 
+int n;
+vector<int> v;
+
+int main()
+{
+	cin >> n;
+
+	v.resize(n);
+	int left = 0;
+	int right = n - 1;
+
+	for (int i = 0; i < n; i++)
+		cin >> v[i];
+	
+	sort(v.begin(), v.end());
+
+	while (left < right)
+	{
+		if (v[left] < 1 && v[left+1] < 1)
+			ret += v[left] * v[left + 1];
+		else
+			break;
+
+		left += 2;
+	}
+
+	while (right > 0)
+	{
+		if (v[right] > 1 && v[right-1] > 1)
+			ret += v[right] * v[right - 1];
+		else
+			break;
+
+		right -= 2;
+	}
+
+	while (left <= right)
+	{
+		ret += v[left];
+		left++;
+	}
+
+	cout << ret << "\n";
+}
+/*
 #include<iostream>
 #include<vector>
 #include<algorithm>
@@ -54,3 +103,4 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+*/
