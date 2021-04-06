@@ -1,4 +1,3 @@
-
 #include<bits/stdc++.h>
 #define pill pair<int,int>
 #define mp(X,Y) make_pair(X,Y)
