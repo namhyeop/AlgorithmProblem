@@ -25,7 +25,10 @@ int main(void)
 	for (int i = 2; i < MAX; i++)
 	for (int j = 0; j <= i; j++)
 	{
-		cache[i][j] = (cache[i - 1][j-1] + cache[i - 1][j]) % 10007;
+		if(i==j || j ==0)
+			cache[i][j] = 1;
+		else
+			cache[i][j] = (cache[i - 1][j-1] + cache[i - 1][j]) % 10007;
 	}
 
 	cout << cache[n][k] % 10007 << "\n";
