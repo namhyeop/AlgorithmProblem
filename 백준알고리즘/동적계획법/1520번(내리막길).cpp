@@ -1,4 +1,56 @@
 #include<bits/stdc++.h>
+#define pill pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define ll long long
+
+using namespace std;
+const int MAX = 501;
+int cache[MAX][MAX];
+int board[MAX][MAX];
+bool visited[MAX][MAX];
+int m, n;
+
+int search(int y, int x)
+{
+	if (y < 0 || x < 0 || y >= m || x >= n)
+		return 0;
+
+	if (m - 1 == y && n - 1 == x)
+		return 1;
+
+	if (visited[y][x])
+		return cache[y][x];
+
+	int &ret = cache[y][x];
+
+	visited[y][x] = true;
+
+	if (board[y][x] > board[y + 1][x] && y + 1 >= 0)
+		ret += search(y + 1, x);
+	if (board[y][x] > board[y - 1][x] && y - 1 >= 0)
+		ret += search(y - 1, x);
+	if (board[y][x] > board[y][x + 1] && x + 1 >= 0)
+		ret += search(y, x + 1);
+	if (board[y][x] > board[y][x - 1] && x - 1 >= 0)
+		ret += search(y, x - 1);
+
+	return ret;
+}
+int main(void)
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
+	cin >> m >> n;
+
+	for (int i = 0; i < m; i++)
+	for (int j = 0; j < n; j++)
+		cin >> board[i][j];
+
+	cout << search(0, 0) << "\n";
+}
+
+/*
+#include<bits/stdc++.h>
 
 using namespace std;
 
@@ -59,5 +111,5 @@ int main()
 	}
 
 	cout << search(1,1) << "\n";
-	getchar();
 }
+*/
