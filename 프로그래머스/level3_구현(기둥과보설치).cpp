@@ -2,6 +2,114 @@
 #define pill pair<int,int>
 #define mp(X,Y) make_pair(X,Y)
 #define ll long long
+#define pb push_back
+#define pillar 0
+#define bow 1
+#define setup 1
+#define INF 123456789
+
+using namespace std;
+int board[110][110][2];
+
+bool check(int n, int y, int x)
+{
+	if (board[y][x][pillar] == setup)
+	{
+		if (y == 0 || board[y - 1][x][pillar] == 1 || board[y][x][bow] == 1 || (x > 0 && board[y][x - 1][bow] == 1))
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+
+	if (board[y][x][bow] == setup)
+	{
+		if ((y > 0 && board[y - 1][x][pillar] == 1) || (y > 0 && board[y - 1][x + 1][pillar] == 1)
+			|| (x > 0 && x < n && board[y][x - 1][bow] == 1 && board[y][x + 1][bow] == 1))
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+	return true;
+}
+
+vector<vector<int>> solution(int n, vector<vector<int>> build_frame) 
+{
+	vector<vector<int>> answer;
+	vector<int> temp;
+
+	for (int i = 0; i < n + 1; i++)
+	{
+		for (int j = 0; j < n + 1; j++)
+		{
+			board[i][j][0] = -INF;
+			board[i][j][1] = -INF;
+		}
+	}
+
+	for (int i = 0; i < build_frame.size(); i++)
+	{
+		int x = build_frame[i][0];
+		int y = build_frame[i][1];
+		int category = build_frame[i][2];
+		int crtORdel = build_frame[i][3];
+
+		if (crtORdel == 1)
+		{
+			if (category == pillar)
+			{
+				board[y][x][pillar] = setup;
+				if (check(n, y, x) == false)
+				{
+					board[y][x][pillar] = -INF;
+				}
+			}
+			else
+			{
+				board[y][x][bow] = setup;
+				if (check(n, y, x) == false)
+				{
+					board[y][x][bow] = -INF;
+				}
+			}
+		}
+		else
+		{
+			if (category == pillar)
+			{
+				if (board[y][x][pillar] == setup)
+				{
+					board[y][x][pillar] = -INF;
+					if (!(check(n, y, x) && check(n, y + 1, x) && check(n, y + 1, x - 1)))
+					{
+						board[y][x][pillar] = setup;
+					}
+				}
+			}
+			else
+			{
+				if (board[y][x][bow] == setup)
+				{
+					board[y][x][bow] = -INF;
+					if (!(check(n, y, x) && check(n, y, x - 1) && check(n, y, (x + 1))))
+					{
+						board[y][x][bow] = setup;
+					}
+				}
+			}
+		}
+	}
+	return answer;
+}
+
+/*
+#include<bits/stdc++.h>
+#define pill pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define ll long long
 
 using namespace std;
 const int MAX = 101;
@@ -228,3 +336,4 @@ int main(void)
 		cout << "\n";
 	}
 }
+*/
