@@ -1,4 +1,108 @@
 #include<bits/stdc++.h>
+
+using namespace std;
+const int MAX = 101;
+bool pillar[MAX][MAX];
+bool bow[MAX][MAX];
+
+bool isValidPillar(int x, int y, int n)
+{
+	if (y == 0)
+		return 1;
+	if (pillar[x][y - 1])
+		return 1;
+	if (x > 0 && bow[x - 1][y])
+		return 1;
+	if (x < n && bow[x][y])
+		return 1;
+
+	return 0;
+}
+
+bool isValidBow(int x, int y, int n)
+{
+	if (pillar[x][y - 1])
+		return 1;
+	if (x < n && pillar[x + 1][y - 1])
+		return 1;
+	if (x > 0 && x < n && bow[x + 1][y] && bow[x - 1][y])
+		return 1;
+
+	return 0;
+}
+
+vector<vector<int>> solution(int n, vector<vector<int>> build_frame)
+{
+	vector<vector<int>> answer;
+
+	for (int i = 0; i < build_frame.size(); i++)
+	{
+		int x, y, a, b;
+		x = build_frame[i][0];
+		y = build_frame[i][1];
+		a = build_frame[i][2];
+		b = build_frame[i][3];
+
+		if (a == 0 && b == 1)
+		{
+			if (isValidPillar(x, y, n))
+			{
+				pillar[x][y] = 1;
+			}
+		}
+
+		else if (a == 1 && b == 1)
+		{
+			if (isValidBow(x, y, n))
+				bow[x][y] = 1;
+		}
+		else if (a == 0 && b == 0)
+		{
+			bool valid = 1;
+			pillar[x][y] = 0;
+
+			if (y < n && pillar[x][y + 1] && !isValidPillar(x, y + 1, n))
+				valid = 0;
+			else if (y < n && bow[x][y + 1] && !isValidBow(x, y + 1, n))
+				valid = 0;
+			else if (x > 0 && bow[x - 1][y + 1] && y < n && !isValidBow(x - 1, y + 1, n))
+				valid = 0;
+
+			if (!valid)
+				pillar[x][y] = 1;
+		}
+		else if (a == 1 && b == 0)
+		{
+			bool valid = 1;
+			bow[x][y] = 0;
+
+			if (pillar[x][y] && !isValidPillar(x, y, n))
+				valid = 0;
+			else if (x < n && pillar[x + 1][y] && !isValidPillar(x + 1, y, n))
+				valid = 0;
+			else if (x > 0 && bow[x - 1][y] && !isValidBow(x - 1, y, n))
+				valid = 0;
+			else if (x < n && bow[x + 1][y] && !isValidBow(x + 1, y, n))
+				valid = 0;
+
+			if (!valid)
+				bow[x][y] = 1;
+		}
+	}
+
+	for (int i = 0; i <= n; i++)
+	for (int j = 0; j <= n; j++)
+	{
+		if (pillar[i][j])
+			answer.push_back({ i, j, 0 });
+		if (bow[i][j])
+			answer.push_back({ i, j, 1 });
+	}
+
+	return answer;
+}
+/*
+#include<bits/stdc++.h>
 #define pill pair<int,int>
 #define mp(X,Y) make_pair(X,Y)
 #define ll long long
@@ -103,7 +207,7 @@ vector<vector<int>> solution(int n, vector<vector<int>> build_frame)
 		}
 	}
 	return answer;
-}
+}*/
 
 /*
 #include<bits/stdc++.h>
