@@ -1,4 +1,5 @@
 #include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
 #define pill pair<int,int>
 #define mp(X,Y) make_pair(X,Y)
 #define ll long long
@@ -8,7 +9,6 @@ using namespace std;
 
 int main(void)
 {
-	ios_base::sync_with_stdio(false);
-	cin.tie(0);
+
 }
 
