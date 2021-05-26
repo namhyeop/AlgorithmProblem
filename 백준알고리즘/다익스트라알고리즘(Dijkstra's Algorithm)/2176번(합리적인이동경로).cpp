@@ -1,4 +1,77 @@
 #include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pill pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int INF = 23002300;
+const int MAX = 1001;
+int n, m, x;
+vector<pair<int, int>> board[MAX];
+
+
+vector<int> dijkstra(int node)
+{
+	vector<int> costArr(n+1, INF);
+	priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+	pq.push({ 0, node });
+	costArr[node] = 0;
+
+	while (!pq.empty())
+	{
+		int cost = pq.top().first;
+		int curnode = pq.top().second;
+		pq.pop();
+
+		if (costArr[curnode] < cost)
+			continue;
+		for (int i = 0; i < board[curnode].size(); i++)
+		{
+			int neighbor = board[curnode][i].first;
+			int neighborcost = cost + board[curnode][i].second;
+
+			if (costArr[neighbor] > neighborcost)
+			{
+				costArr[neighbor] = neighborcost;
+				pq.push({ neighborcost, neighbor });
+			}
+		}
+	}
+
+	return costArr;
+}
+int main(void)
+{
+	fastio;
+
+	cin >> n >> m >> x;
+
+	for (int i = 0; i < m; i++)
+	{
+		int stnode, ednode, d;
+		cin >> stnode >> ednode >> d;
+		board[stnode].push_back({ ednode, d });
+	}
+
+	int ret = INT_MIN;
+	vector<int> back = dijkstra(x);
+	for (int i = 1; i <= n; i++)
+	{
+		vector<int> go = dijkstra(i);
+		if (go[x] + back[i] >= INF || go[x] + back[i] < 0)
+			continue;
+		ret = max(ret, go[x] + back[i]);
+	}
+
+	cout << ret << "\n";
+}
+
+/*
+#include<bits/stdc++.h>
 #define MAX 1001
 using namespace std;
 
@@ -55,3 +128,4 @@ int main(int argc, char *argv)
 
 	return 0;
 }
+*/
