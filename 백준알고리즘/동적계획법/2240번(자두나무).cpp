@@ -1,4 +1,57 @@
 #include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pill pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 1001;
+const int MOVE = 31;
+int t, w;
+int cache[3][MAX][MOVE];
+int arr[MAX];
+
+int search(int curTree, int cnt, int moveCnt)
+{
+	if (cnt == t)
+		return 0;
+
+	int &ret = cache[curTree][cnt][moveCnt];
+
+	if (ret != -1)
+		return ret;
+	if (arr[cnt] == curTree)
+	{
+		if (moveCnt < w)
+			return ret = max(1 + search(curTree, cnt + 1, moveCnt), search(3 - curTree, cnt + 1, moveCnt + 1));
+		else
+			return ret = 1 + search(curTree, cnt + 1, moveCnt);
+	}
+	else
+	{
+		if (moveCnt < w)
+			return ret = max(search(curTree, cnt + 1, moveCnt), 1 + search(3 - curTree, cnt + 1, moveCnt + 1));
+		else
+			return ret = search(curTree, cnt + 1, moveCnt);
+	}
+}
+
+int main(void)
+{
+	fastio;
+	cin >> t >> w;
+
+	for (int i = 0; i < t; i++)
+		cin >> arr[i];
+	memset(cache, -1, sizeof(cache));
+	cout << search(1, 0, 0);
+}
+
+/*
+#include<bits/stdc++.h>
 
 using namespace std;
 const int MAX = 1001;
@@ -40,3 +93,4 @@ int main()
 
 	return 0;
 }
+*/
