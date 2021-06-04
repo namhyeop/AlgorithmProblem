@@ -34,14 +34,14 @@ int32_t main(void)
 	int t, ans = 0;
 	cin >> t;
 
-	while (t--)
+	while (t--) //1. n면체 주사위를 t번 받는다.
 	{
 		int a, b;
-		cin >> a >> b;
-		int g = gcd(a, b);
-		a /= g;
-		b /= g;
-		ans = (ans + b * minv(a, MOD)) % MOD;
+		cin >> a >> b; //2. n번째 주사위의 a값과 b값을 받는다.
+		int g = gcd(a, b);//3. 최대공약수를 구한다.
+		a /= g; //4.최대공약수로 a값을 한 번 나눈다.
+		b /= g; //5/최대공약수로 b값을 한 번 나눈다.
+		ans = (ans + b * minv(a, MOD)) % MOD; //6.ans는 정답을 담는 변수. minv함수를 이용해 b^-1의 최소값을 찾는다.
 	}
 	cout << ans << "\n";
 }
