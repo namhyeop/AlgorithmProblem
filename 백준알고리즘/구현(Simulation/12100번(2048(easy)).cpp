@@ -1,3 +1,354 @@
+//20210605 두 번째 
+#include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pill pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 21;
+int board[MAX][MAX];
+int maxValue;
+int n;
+
+void dfs(int cnt)
+{
+	auto shift = [&](int type)
+	{
+		queue<int> q;
+
+		switch (type)
+		{
+		case 0: //좌
+			for (int i = 0; i < n; i++)
+			{
+				for (int j = 0; j < n; j++)
+				{
+					if (board[i][j])
+						q.push(board[i][j]);
+					board[i][j] = 0;
+				}
+				int idx = 0;
+
+				while (!q.empty())
+				{
+					int data = q.front();
+					q.pop();
+
+					if (board[i][idx] == 0)
+						board[i][idx] = data;
+					else if (board[i][idx] == data)
+					{
+						board[i][idx] *= 2;
+						idx++;
+					}
+					else
+					{
+						idx++;
+						board[i][idx] = data;
+					}
+				}
+			}
+			break;
+		case 1://우
+			for (int i = 0; i < n; i++)
+			{
+				for (int j = n - 1; j >= 0; j--)
+				{
+					if (board[i][j])
+						q.push(board[i][j]);
+					board[i][j] = 0;
+				}
+				int idx = n - 1;
+
+				while (!q.empty())
+				{
+					int data = q.front();
+					q.pop();
+
+					if (board[i][idx] == 0)
+						board[i][idx] = data;
+					else if (board[i][idx] == data)
+					{
+						board[i][idx] *= 2;
+						idx--;
+					}
+					else
+					{
+						idx--;
+						board[i][idx] = data;
+					}
+				}
+			}
+			break;
+		case 2://상
+			for (int i = 0; i < n; i++)
+			{
+				for (int j = 0; j < n; j++)
+				{
+					if (board[j][i])
+						q.push(board[j][i]);
+				
+					board[j][i] = 0;
+					
+				}
+
+				int idx = 0;
+				while (!q.empty())
+				{
+					int data = q.front();
+					q.pop();
+
+					if (board[idx][i] == 0)
+						board[idx][i] = data;
+					else if (board[idx][i] == data)
+					{
+						board[idx][i] *= 2;
+						idx++;
+					}
+					else
+					{
+						idx++;
+						board[idx][i] = data;
+					}
+				}
+			}
+			break;
+		case 3://하
+			for (int i = 0; i < n; i++)
+			{
+				for (int j = n - 1; j >= 0; j--)
+				{
+					if (board[j][i])
+						q.push(board[j][i]);
+					board[j][i] = 0;
+				}
+				int idx = n - 1;
+				while (!q.empty())
+				{
+					int data = q.front();
+					q.pop();
+
+					if (board[idx][i] == 0)
+						board[idx][i] = data;
+					else if (board[idx][i] == data)
+					{
+						board[idx][i] *= 2;
+						idx--;
+					}
+					else
+					{
+						idx--;
+						board[idx][i] = data;
+
+					}
+				}
+			}
+			break;
+		}
+	};
+
+	if (cnt == 5)
+	{
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			maxValue = max(maxValue, board[i][j]);
+		}
+		return;
+	}
+
+	int tmpboard[MAX][MAX];
+	for (int i = 0; i < n; i++)
+	for (int j = 0; j < n; j++)
+		tmpboard[i][j] = board[i][j];
+
+	for (int i = 0; i < 4; i++)
+	{
+		shift(i);
+		dfs(cnt + 1);
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			board[i][j] = tmpboard[i][j];
+	}
+};
+
+int main(void)
+{
+	fastio;
+	cin >> n;
+
+	for (int i = 0; i < n; i++)
+	for (int j = 0; j < n; j++)
+		cin >> board[i][j];
+
+	dfs(0);
+	cout << maxValue << "\n";
+
+}
+
+// auto shift = [&](int type)
+//{
+//	queue<int> q;
+
+//	switch (type)
+//	{
+//	case 0: //좌
+//		for (int i = 0; i < n; i++)
+//		{
+//			for (int j = 0; j < n; j++)
+//			{
+//				if (board[i][j])
+//					q.push(board[i][j]);
+//				board[i][j] = 0;
+//			}
+//			int idx = 0;
+
+//			while (!q.empty())
+//			{
+//				int data = q.front();
+//				q.pop();
+
+//				if (board[i][idx] == 0)
+//					board[i][idx] = data;
+//				else if (board[i][idx] == data)
+//				{
+//					board[i][idx] *= 2;
+//					idx++;
+//				}
+//				else
+//				{
+//					idx++;
+//					board[i][idx] = data;
+//				}
+//			}
+//		}
+//		break;
+//	case 1://우
+//		for (int i = 0; i < n; i++)
+//		{
+//			for (int j = n - 1; j >= 0; j--)
+//			{
+//				if (board[i][j])
+//					q.push(board[i][j]);
+//				board[i][j] = 0;
+//			}
+//			int idx = n - 1;
+
+//			while (!q.empty())
+//			{
+//				int data = q.front();
+//				q.pop();
+
+//				if (board[i][idx] == 0)
+//					board[i][idx] = data;
+//				else if (board[i][idx] == data)
+//				{
+//					board[i][idx] *= 2;
+//					idx--;
+//				}
+//				else
+//				{
+//					idx--;
+//					board[i][idx] = data;
+//				}
+//			}
+//		}
+//		break;
+//	case 2://상
+//		for (int i = 0; i < n; i++)
+//		{
+//			for (int j = 0; j < n; j++)
+//			{
+//				if (board[j][i])
+//				{
+//					q.push(board[j][i]);
+//					board[j][i] = 0;
+//				}
+//			}
+
+//			int idx = 0;
+//			while (!q.empty())
+//			{
+//				int data = q.front();
+//				q.pop();
+
+//				if (board[idx][i] == 0)
+//					board[idx][i] = data;
+//				else if (board[idx][i] == data)
+//				{
+//					board[idx][i] *= 2;
+//					idx++;
+//				}
+//				else
+//				{
+//					idx++;
+//					board[idx][i] = data;
+//				}
+//			}
+//		}
+//		break;
+//	case 3://하
+//		for (int i = 0; i < n; i++)
+//		for (int j = n - 1; j >= 0; j--)
+//		{
+//			if (board[j][i])
+//			{
+//				q.push(board[j][i]);
+//				board[j][i] = 0;
+//			}
+//			int idx = n - 1;
+//			while (!q.empty())
+//			{
+//				int data = q.front();
+//				q.pop();
+
+//				if (board[idx][i] == 0)
+//					board[idx][i] = data;
+//				else if (board[idx][i] == data)
+//				{
+//					board[idx][i] *= 2;
+//					idx--;
+//				}
+//				else
+//				{
+//					idx--;
+//					board[idx][i] = data;
+//				}
+//			}
+//		}
+//		break;
+//	}
+//};
+
+//function<int(int)> dfs = [&](int cnt)
+//{
+//if (cnt == 5)
+//{
+//for (int i = 0; i < n; i++)
+//for (int j = 0; j < n; j++)
+//{
+//maxValue = max(maxValue, board[i][j]);
+//}
+//}
+//int tmpboard[MAX][MAX];
+//for (int i = 0; i < n; i++)
+//for (int j = 0; j < n; j++)
+//tmpboard[i][j] = board[i][j];
+//for (int i = 0; i < 4; i++)
+//{
+//shift(i);
+//dfs(cnt + 1);
+//for (int i = 0; i < n; i++)
+//for (int j = 0; j < n; j++)
+//tmpboard[i][j] = board[i][j];
+//}
+//};
+
+
 #include<bits/stdc++.h>
 
 using namespace std;
@@ -91,3 +442,4 @@ int main(void)
 	}
 	cout << mx;
 }
+*/
