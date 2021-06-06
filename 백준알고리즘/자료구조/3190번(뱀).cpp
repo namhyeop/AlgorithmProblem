@@ -1,3 +1,94 @@
+//20210606 
+#include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pill pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+#define apple 2300
+
+using namespace std;
+const int MAX = 101;
+int n, k, l;
+int board[MAX][MAX];
+bool check[MAX][MAX];
+queue<pair<int, char>> move_q;
+int moveY[] = { 0, -1, 0, 1 };
+int moveX[] = { 1, 0, -1, 0 };
+int main(void)
+{
+	fastio;
+	cin >> n >> k;
+
+	auto search = [&]() -> int
+	{
+		board[0][0] = 1;
+		
+		int dirnum = 0;
+		pair<int, int> head = { 0, 0 };
+		queue<pair<int, int>> tailState;
+		tailState.push({ 0, 0 });
+		
+		int cnt = 0;
+		while (1)
+		{
+			cnt++;
+			int nextY = head.first + moveY[dirnum];
+			int nextX = head.second + moveX[dirnum];
+
+			if (!(nextY >= 0 && nextY < n && nextX >= 0 && nextX < n))
+			{
+				return cnt;
+			}
+			else if (board[nextY][nextX] == 1)
+				return cnt;
+			else if (board[nextY][nextX] != apple)
+			{
+				board[tailState.front().first][tailState.front().second] = 0;
+				tailState.pop();
+			}
+			head.first = nextY;
+			head.second = nextX;
+			tailState.push(head);
+			board[nextY][nextX] = 1;
+			
+			if (!move_q.empty())
+			if (cnt == move_q.front().first)
+			{
+				auto curMove = move_q.front();
+				move_q.pop();
+				if (curMove.second == 'D')
+				{
+					dirnum = (dirnum + 3) % 4;
+				}
+				else if (curMove.second == 'L')
+				{
+					dirnum = (dirnum + 1) % 4;
+				}
+			}
+		}
+	};
+
+	for (int i = 0; i < k; i++)
+	{
+		int node1, node2;
+		cin >> node1 >> node2;
+		board[node1-1][node2-1] = apple;
+	}	
+	cin >> l;
+	for (int i = 0; i < l; i++)
+	{
+		int time;
+		char dir;
+		cin >> time >> dir;
+		move_q.push({ time, dir });
+	}
+
+	cout << search() << "\n";
+}
+/*
 #include<iostream>
 #include<queue>
 using namespace std;
@@ -88,3 +179,4 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+*/
