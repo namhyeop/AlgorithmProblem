@@ -1,3 +1,65 @@
+//20210609
+#include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pill pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 51;
+int board[MAX][MAX];
+int moveY[] = { -1, 0, 1, 0 };
+int moveX[] = { 0, 1, 0, -1 };
+int backY[] = { 1, 0, -1, 0 };
+int backX[] = { 0, -1, 0, 1 };
+int n, m;
+int cnt;
+int main(void)
+{
+	fastio;
+	cin >> n >> m;
+
+	int y, x, dir;
+	cin >> y >> x >> dir;
+
+	for (int i = 0; i < n; i++)
+	for (int j = 0; j < m; j++)
+		cin >> board[i][j];
+
+	function<void(int, int, int)> dfs = [&](int y, int x, int d)
+	{
+		if (board[y][x] == 0)
+		{
+			cnt++;
+			board[y][x] = 23002300;
+		}
+
+		for (int i = d; i > d - 4; i--)
+		{
+			int dir = (i + 3) % 4;
+			int nextY = y + moveY[dir];
+			int nextX = x + moveX[dir];
+
+			if (nextY >= 0 && nextY < n && nextX >= 0 && nextX < m)
+			if (board[nextY][nextX] == 0)
+			{
+				dfs(nextY, nextX, dir);
+				return;
+			}
+		}
+
+		if (board[y + backY[d]][x + backX[d]] == 1)
+			return;
+		else
+			dfs(y + backY[d], x + backX[d], d);
+	};
+	dfs(y, x, dir);
+	cout << cnt << "\n";
+}
+/*
 #include<bits/stdc++.h>
 #define MAX 50
 using namespace std;
@@ -55,4 +117,4 @@ int main(void)
 	cout << cnt << "\n";
 	return 0;
 }
-
+*/
