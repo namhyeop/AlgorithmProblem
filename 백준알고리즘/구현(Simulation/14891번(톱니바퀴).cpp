@@ -1,4 +1,104 @@
 #include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pill pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+
+int arr[4][8];
+int way[2] = { -1, 1 };
+
+int main(void)
+{
+	fastio;
+	string str;
+	for (int i = 0; i < 4; i++)
+	{
+		cin >> str;
+		for (int j = 0; j < 8; j++)
+			arr[i][j] = str[j] - '0';
+	}
+
+	auto tobin_rotate = [&](int rotateWay[4])
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			if (rotateWay[k] == 1)
+			{
+				int tmp = arr[k][7];
+				for (int i = 7; i > 0; i--)
+					arr[k][i] = arr[k][i - 1];
+				arr[k][0] = tmp;
+			}
+			else if (rotateWay[k] == -1)
+			{
+				int tmp = arr[k][0];
+				for (int i = 0; i < 7; i++)
+					arr[k][i] = arr[k][i + 1];
+				arr[k][7] = tmp;
+			}
+		}
+	};
+
+	auto operate = [&](int tobin, int dir)
+	{
+		int rotateWay[4] = { 0, 0, 0, 0 };
+		rotateWay[tobin] = dir;
+
+		queue<pair<int, int>> q;
+		int cur = tobin;
+		for (int i = 0; i < 2; i++)
+		{
+			if (tobin + way[i] >= 0 && tobin + way[i] < 4)
+				q.push({ cur, tobin + way[i] });
+		}
+
+		while (!q.empty())
+		{
+			int start = q.front().first;
+			int end = q.front().second;
+			q.pop();
+
+			int small = start < end ? start : end;
+			int big = start < end ? end : start;
+
+			if (arr[small][2] == arr[big][6])
+				continue;
+
+			rotateWay[end] = -(rotateWay[start]);
+
+			for (int i = 0; i < 2; i++)
+			{
+				int next = end + way[i];
+				if (next >= 0 && next < 4 && rotateWay[next] == 0)
+					q.push({ end, next });
+			}
+		}
+		tobin_rotate(rotateWay);
+	};
+
+	int k;
+	cin >> k;
+	for (int i = 0; i < k; i++)
+	{
+		int tobin, dir;
+		cin >> tobin >> dir;
+		operate(tobin - 1, dir);
+	}
+
+	int ret = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		ret += (arr[i][0] == 1) ? pow(2, i) : 0;
+	}
+	cout << ret << "\n";
+}
+/*
+#include<bits/stdc++.h>
 
 using namespace std;
 #define TOBIN_NUM 4
@@ -91,4 +191,4 @@ int main(void)
 	cout << print_answer();
 
 	return 0;
-}
+}*/
