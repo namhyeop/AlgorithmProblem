@@ -31,7 +31,7 @@ void counterClockwise(int num)
 		cube[num][i][j] = copy2d[j][3 - 1 - i];
 }
 
-void U(int num)
+void U(int num)//U위치를 정면으로 시계 방향으로 회전한것, u == 0이면 U인 상황에 시계방향으로 돌린것과 같은 연출이 나옴, u == 2일때는  D을 기준으로 반시계 방향으로 돌린것과 같은 연출이 나옴., 밑에도 같은 개념
 {
 	char temp[3];
 
@@ -66,7 +66,7 @@ void D(int num)
 void F(int num)
 {
 	char temp[3];
-	int idx = (num == 0 ? 2 : 0);
+	int idx = (num == 0 ? 2 : 0); //U와 D는 idx를 놔둘 필요가 없다. 큐브를 생각해보자 시계 방향이든, 반시계 방향이든 회전되는 상하의 인덱스 위치가 변함이없다. 그러나 다른 측면들은 큐브를 돌릴때 상 하 개념에서 위치가 반전될 때가 있다. ex:)1 -> 4, 4 -> 1
 
 	for (int i = 0; i < 3; i++)
 		temp[i] = cube[0][num][i];
