@@ -116,12 +116,7 @@ int visited[MAX][MAX];
 vector<int> aircleaner;
 int moveY[] = { -1, 1, 0, 0 };
 int moveX[] = { 0, 0, -1, 1 };
-/*
-3 3 1
-0 30 7
--1 10 0
--1 0 20
-*/
+
 void spread() //미세먼지 확장
 {
 	memset(srBoard, 0, sizeof(srBoard));
