@@ -1,4 +1,191 @@
 #include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pii pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 21;
+typedef struct
+{
+	int y, x;
+	int gas;
+}Car;
+
+bool operator < (Car a, Car b)
+{
+	if (a.gas < b.gas)
+		return true;
+	if (a.gas == b.gas)
+	{
+		if (a.y > b.y)
+			return true;
+		if (a.y == b.y)
+		{
+			if (a.x > b.x)
+				return true;
+		}
+	}
+	return false;
+}
+
+int board[MAX][MAX];
+int moveY[] = {-1,0,1,0};
+int moveX[] = {0,-1,0,1};
+bool visited[MAX][MAX];
+int n, m, g;
+Car car;
+
+int main(void)
+{
+	fastio;
+	
+	cin >> n >> m >> g;
+
+	for (int i = 0; i < n; i++)
+	for (int j = 0; j < n; j++)
+	{
+		cin >> board[i][j];
+		if (board[i][j] == 1)
+			board[i][j] = INT_MAX;
+	}
+	int carY, carX;
+	cin >> carY >> carX;
+	carY--, carX--;
+	car.y = carY, car.x = carX, car.gas = g;
+
+	vector<tuple<int, int, int, int>> road(m + 1);
+
+	for (int i = 1; i <= m; i++)
+	{
+		int sy, sx, ey, ex;
+		cin >> sy >> sx >> ey >> ex;
+		sy--, sx--, ey--, ex--;
+		road[i] = make_tuple( sy, sx, ey, ex );
+		board[sy][sx] = i;
+	}
+	
+	auto BFS = [&]() -> bool
+	{
+		memset(visited, false, sizeof(visited));
+		priority_queue<Car> pq;
+		pq.push({ car.y,car.x, car.gas});
+		visited[car.y][car.x] = true;
+		int sdGas = 0;
+		while (!pq.empty())
+		{
+			int qSize = pq.size();
+			for (int i = 0; i < qSize; i++)
+			{
+				int curY = pq.top().y;
+				int curX = pq.top().x;
+				int curGas = pq.top().gas;
+				pq.pop();
+				if (board[curY][curX] != 0 && board[curY][curX] != INT_MAX)
+				{
+					car.gas -= sdGas;
+					if (car.gas >= 0)
+					{
+						car.y = curY;
+						car.x = curX;
+						int pnum = board[curY][curX];
+						int pY = get<0>(road[board[curY][curX]]);
+						int pX = get<1>(road[board[curY][curX]]);
+						auto BFS2 = [&](int y, int x, int pnum) -> bool
+						{
+							memset(visited, false, sizeof(visited));
+							queue<pair<int, int>> q;
+							int sY = get<0>(road[pnum]);
+							int sX = get<1>(road[pnum]);
+							int eY = get<2>(road[pnum]);
+							int eX = get<3>(road[pnum]);
+							q.push({ car.y, car.x });
+
+							int sdGas = 0;
+							while (!q.empty())
+							{
+								int qSize = q.size();
+								for (int i = 0; i < qSize; i++)
+								{
+									int y = q.front().first;
+									int x = q.front().second;
+									q.pop();
+									
+									if (y == eY && x == eX)
+									{
+										car.gas -= sdGas;
+										if (car.gas >= 0)
+										{
+											car.gas += sdGas * 2;
+											car.y = eY;
+											car.x = eX;
+											board[sY][sX] = 0;
+											return true;
+										}
+										else
+											return false;
+									}
+									for (int i = 0; i < 4; i++)
+									{
+										int nextY = y + moveY[i];
+										int nextX = x + moveX[i];
+
+										if (nextY >= 0 && nextY < n && nextX >= 0 && nextX < n)
+										if (board[nextY][nextX] != INT_MAX && !visited[nextY][nextX])
+										{
+											q.push({ nextY, nextX });
+											visited[nextY][nextX] = true;
+										}
+									}
+								}
+								sdGas++;
+							}
+							return false;
+						};
+						if (BFS2(pY, pX, pnum))
+							return true;
+						else
+							return false;
+					}
+					else
+						return false;
+				}
+
+				for (int i = 0; i < 4; i++)
+				{
+					int nextY = curY + moveY[i];
+					int nextX = curX + moveX[i];
+
+					if (nextY >= 0 && nextY < n && nextX >= 0 && nextX < n)
+					if (board[nextY][nextX] != INT_MAX && !visited[nextY][nextX])
+					{
+						pq.push({ nextY, nextX, curGas -1 });
+						visited[nextY][nextX] = true;
+					}
+				}
+			}
+			sdGas++;
+		}
+		return false;
+	};
+
+	for (int i = 0; i < m; i++)
+	{
+		if (!BFS())
+		{
+			cout << -1 << '\n';
+			return 0;
+		}
+	}
+
+	cout << car.gas << '\n';
+}
+
+/*
+#include<bits/stdc++.h>
 #define MAX 20
 using namespace std;
 
@@ -170,3 +357,4 @@ int main(void)
 	}
 	return 0;	
 }
+*/
