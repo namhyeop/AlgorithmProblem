@@ -1,4 +1,87 @@
 #include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pii pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+
+const int MAX = 201;
+int n, k;
+int arr[MAX];
+bool visited[MAX];
+int main()
+{
+	fastio;
+	cin >> n >> k;
+
+	for (int i = 0; i < 2 * n; i++)
+		cin >> arr[i];
+	
+	int level = 0;
+	int cnt = 0;
+	while (1)
+	{
+		if (cnt >= k)
+			break;
+		auto beltrotate = [&]()
+		{
+			int tmp = arr[2 * n - 1];
+			for (int i = 2 * n - 1; i > 0; i--)
+				arr[i] = arr[i - 1];
+			arr[0] = tmp;
+
+			bool tmp2 = visited[2 * n - 1];
+			for (int i = 2 * n - 1; i > 0; i--)
+				visited[i] = visited[i - 1];
+			visited[0] = tmp2;
+
+			visited[n - 1] = false;
+		};
+
+		auto robotrotate = [&]()
+		{
+			for (int i = n - 2; i >= 0; i--)
+			{
+				if (!visited[i + 1] && arr[i + 1] > 0 && visited[i])
+				{
+					visited[i] = false;
+					visited[i + 1] = true;
+					arr[i + 1] -= 1;
+				}
+			}
+			visited[n - 1] = false;
+		};
+
+		auto putrobot = [&]()
+		{
+			if (arr[0] > 0 && !visited[0])
+			{
+				arr[0] -= 1;
+				visited[0] = true;
+			}
+		};
+
+		beltrotate();
+		robotrotate();
+		putrobot();
+
+		int tmpcnt = 0;
+		for (int i = 0; i < 2 * n; i++)
+			if (arr[i] == 0)
+				tmpcnt++;
+
+		cnt = tmpcnt;
+		level++;
+	}
+
+	cout << level << "\n";
+}
+/*
+#include<bits/stdc++.h>
 
 using namespace std;
 
@@ -73,3 +156,4 @@ int main()
 	}
 	return 0;
 }
+*/
