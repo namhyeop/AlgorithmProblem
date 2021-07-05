@@ -1,4 +1,126 @@
 #include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pii pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 51;
+
+struct Fireball
+{
+	int r, c, m, s, d;
+	Fireball(int r, int c, int m, int s, int d) : r(r), c(c), m(m), s(s), d(d) {}
+};
+
+int n, m, k;
+vector<Fireball> board[MAX][MAX];
+
+int moveY[] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+int moveX[] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+
+int main(void)
+{
+	fastio;
+	cin >> n >> m >> k;
+
+	for (int i = 0; i < m; i++)
+	{
+		int r, c, m, s, d;
+		cin >> r >> c >> m >> s >> d;
+		r--, c--;
+		board[r][c].push_back({ r, c, m, s, d });
+	}
+
+	auto move = [&]()
+	{
+		vector<Fireball> tmpboard[50][50];
+
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			for (auto unit : board[i][j])
+			{
+				for (int i = 0; i < unit.s; i++)
+				{
+					unit.r += moveY[unit.d];
+					if (unit.r == n)
+						unit.r = 0;
+					else if (unit.r == -1)
+						unit.r = n - 1;
+
+					unit.c += moveX[unit.d];
+					if (unit.c == n)
+						unit.c = 0;
+					else if (unit.c == -1)
+						unit.c = n - 1;
+				}
+				tmpboard[unit.r][unit.c].push_back({ unit.r, unit.c, unit.m, unit.s, unit.d });
+			}
+		}
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			board[i][j] = tmpboard[i][j];
+	};
+
+	auto merge = [&]()
+	{
+		for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			if (board[i][j].size() < 2)
+				continue;
+
+			int size = board[i][j].size();
+			int mSum = 0;
+			int sSum = 0;
+			//모두 홀수면 4 짝수면 -4;
+			int cnt = 0;
+			for (auto unit : board[i][j])
+			{
+				sSum += unit.s;
+				mSum += unit.m;
+				unit.m = 0;
+				if (unit.d & 1)
+					cnt++;
+				else
+					cnt--;
+			}
+
+			board[i][j].clear();
+
+			if (mSum / 5 == 0)
+				continue;
+
+			int dir = (abs(cnt) == size ? 0 : 1);
+			for (int k = 0; k < 4; k++)
+			{
+				board[i][j].push_back({ i, j, mSum / 5, sSum / size, dir});
+				dir += 2;
+			}
+		}
+	};
+
+	for (int t = 0; t < k; t++)
+	{
+		move();
+		merge();
+	}
+
+	int ret = 0;
+	for (int i = 0; i < n; i++)
+	for (int j = 0; j < n; j++)
+	for (auto unit : board[i][j])
+		ret += unit.m;
+
+	cout << ret << "\n";
+}
+
+/*
+#include<bits/stdc++.h>
 
 using namespace std;
 
@@ -119,3 +241,4 @@ int main(void)
 
 	return 0;
 }
+*/
