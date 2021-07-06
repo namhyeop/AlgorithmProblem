@@ -1,114 +1,121 @@
-#include <bits/stdc++.h>
-#define MAX 510
+
+#include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pii pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
 
 using namespace std;
 
-int n;
-int ret;
+const int MAX = 500;
+
+int moveY[] = { 0, 1, 0, -1 };
+int moveX[] = { -1, 0, 1, 0 };
+
+double sandPercentage[5][5] = {
+	{ 0, 0, 0.02, 0, 0 },
+	{ 0, 0.1, 0.07, 0.01, 0 },
+	{ 0.05, 0.55, 0, 0, 0 },
+	{ 0, 0.1, 0.07, 0.01, 0 },
+	{ 0, 0, 0.02, 0, 0 }
+};
+
 int board[MAX][MAX];
-//동서남북
-int moveY[] = { 0, 0, 1, -1 };
-int moveX[] = { 1, -1, 0, 0};
-
-//동서남북 순으로 1,1,7,7,10,10,2,2,5 위 위치를 매핑
-int ydy[4][10] = 
-{ 
-	{ -1, 1, -1, 1, -1, 1, -2, 2, 0, 0 }, 
-	{ -1, 1, -1, 1, -1, 1, -2, 2, 0, 0 },
-	{ 0, 0, 1, 1, 2, 2, 1, 1, 3, 2 }, 
-	{ 0, 0, -1, -1, -2, -2, -1, -1, -3, -2 } 
-};
-
-int xdx[4][10] = 
-{ 
-	{ 0, 0, 1, 1, 2, 2, 1, 1, 3, 2 }, 
-	{ 0, 0, -1, -1, -2, -2, -1, -1, -3, -2 },
-	{ -1, 1, -1, 1, -1, 1, -2, 2, 0, 0 }, 
-	{ -1, 1, -1, 1, -1, 1, -2, 2, 0, 0 } 
-};
-
-int arr[9] = { 1, 1, 7, 7, 10, 10, 2, 2, 5 };
-
-int change_dir(int num)
-{
-	if (num == 0)
-		return 3;
-	if (num == 1)
-		return 2;
-	if (num == 2)
-		return 0;
-	if (num == 3)
-		return 1;
-}
-void spread_sand(int y, int x, int dir)
-{
-	int nextY = y + moveY[dir];
-	int nextX = x + moveX[dir];
-	if (board[nextY][nextX] == 0)
-		return;
-
-	int sand = board[nextY][nextX];
-	int temp = sand;
-	for (int i = 0; i < 9; i++)
-	{
-		int toY = y + ydy[dir][i];
-		int toX = x + xdx[dir][i];
-		int per = arr[i];
-		int plus = (temp * per) / 100;
-
-		if (toX < 1 || toY < 1 || toX > n || toY > n)
-			ret += plus;
-		else
-			board[toY][toX] += plus;
-		sand -= plus;
-	}
-	int toY = y + ydy[dir][9];
-	int toX = x + xdx[dir][9];
-	
-	if (toY < 1 || toX < 1 || toX > n || toY > n)
-		ret += sand;
-	else
-		board[toY][toX] += sand;
-	board[nextY][nextX] = 0;
-}
-
+int ret;
 int main(void)
 {
+	fastio;
+	int n;
 	cin >> n;
-	for (int i = 1; i <= n; i++)
-	for (int j = 1; j <= n; j++)
-		cin >> board[i][j];
 
-	int y = (n + 1) / 2;
-	int x = (n + 1) / 2;
-	int dir = 1; // 가장 처음에는 서쪽으로 이동
-	int move_cnt = 1;
+	for (int i = 0; i < n; i++)
+	for (int j = 0; j < n; j++)
+		cin >> board[i][j];
+	
+	int y = n / 2;
+	int x = n / 2;
+	int cnt = 1;
+	int dir = 0;
 
 	while (1)
 	{
+		if (y == 0 && x == 0)
+			break;
+
 		for (int i = 0; i < 2; i++)
 		{
-			for (int j = 0; j < move_cnt; j++)
+			for (int j = 0; j < cnt; j++)
 			{
-				spread_sand(y, x, dir);
 				y += moveY[dir];
 				x += moveX[dir];
-			}
-			dir = change_dir(dir);
-		}
-		move_cnt++;
-		if (move_cnt == n)
-		{
-			for (int j = 0; j < move_cnt; j++)
-			{
-				spread_sand(y, x, dir);
-				y += moveY[dir];
-				x += moveX[dir];
-			}
-			break;
-		}
-	}
-	cout << ret << "\n";
 
-	return 0;
+				auto moveSand = [&](int y, int x)
+				{
+					int curSand = board[y][x];
+					board[y][x] = 0;
+
+					if (curSand == 0)
+						return;
+
+					for (int i = -2; i <= 2; i++)
+					for (int j = -2; j <= 2; j++)
+					{
+						double curSandPercentage = sandPercentage[i + 2][j + 2];
+
+						if (curSandPercentage == 0)
+							continue;
+
+						auto alphaSand = [&](int curSand) -> int
+						{
+							return curSand
+								- floor(curSand * 0.02) * 2
+								- floor(curSand * 0.07) * 2
+								- floor(curSand * 0.10) * 2
+								- floor(curSand * 0.01) * 2
+								- floor(curSand * 0.05);
+						};
+
+						int moveSand;
+						if (curSandPercentage < 0.55)
+							moveSand = floor(curSandPercentage * curSand);
+						else
+							moveSand = alphaSand(curSand);
+
+						int nextY = y + i;
+						int nextX = x + j;
+
+						if (nextY < 0 || nextY >= n || nextX < 0 || nextX >= n)
+							ret += moveSand;
+						else
+							board[nextY][nextX] += moveSand;
+					}
+				};
+				moveSand(y, x);
+				if (y == 0 && x == 0)
+				{
+					cout << ret << '\n';
+					return 0;
+				}
+			}
+			dir = (dir == 3) ? 0 : dir + 1;
+			
+			auto rotateSand = [&]()
+			{
+				double tmpsandPercentage[5][5];
+
+				for (int i = 0; i < 5; i++)
+				for (int j = 0; j < 5; j++)
+					tmpsandPercentage[i][j] = sandPercentage[i][j];
+
+				for (int i = 0; i < 5; i++)
+				for (int j = 0; j < 5; j++)
+					sandPercentage[5 - j -1][i] = tmpsandPercentage[i][j];
+			};
+			rotateSand();
+		}
+		cnt++;
+	}
 }
