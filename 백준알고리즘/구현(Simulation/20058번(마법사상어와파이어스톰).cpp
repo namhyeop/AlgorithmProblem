@@ -1,4 +1,145 @@
 #include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pii pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 64;
+
+int moveY[] = { -1, 0, 1, 0 };
+int moveX[] = { 0, -1, 0, 1 };
+bool visited[MAX][MAX];
+int board[MAX][MAX];
+int n, q;
+
+int main(void)
+{
+	fastio;
+	
+	cin >> n >> q;
+	
+	for (int i = 0; i < (1 << n); i++)
+	for (int j = 0; j < (1 << n); j++)
+		cin >> board[i][j];
+
+	while (q--)
+	{
+		int l;
+		cin >> l;
+
+		auto fireStorm = [&]()
+		{
+			queue<pair<int, int>> q;
+			for (int i = 0; i < (1 << n); i++)
+			for (int j = 0; j < (1 << n); j++)
+			{
+				if (!board[i][j])
+					continue;
+
+				int adjacentCnt = 0;
+				for (int d = 0; d < 4; d++)
+				{
+					int nextY = i + moveY[d];
+					int nextX = j + moveX[d];
+
+					if (nextY >= 0 && nextY < (1 << n) && nextX >= 0 && nextX < (1 << n))
+					{
+						if (board[nextY][nextX])
+							adjacentCnt++;
+					}
+				}
+				if (adjacentCnt < 3)
+					q.push({ i, j });
+			}
+
+			while (!q.empty())
+			{
+				int y = q.front().first;
+				int x = q.front().second;
+				q.pop();
+
+				board[y][x]--;
+			}
+		};
+
+		auto rotate = [&](int i , int j , int l)
+		{
+			int tmpA[MAX][MAX];
+			for (int y = i; y < i + (1 << l); y++)
+			for (int x = j; x < j + (1 << l); x++)
+				tmpA[y][x] = board[y][x];
+			
+			for (int y = i; y < i + (1 << l); y++)
+			for (int x = j; x < j + (1 << l); x++)
+				board[x + i - j][i + (1 << l) - (y + 1) + j] = tmpA[y][x];
+		};
+		//i = 3, j = 0;
+		//tmp[j][n - i - 1] = tmp[i][j]
+		for (int i = 0; i < (1 << n); i += (1 << l))
+		for (int j = 0; j < (1 << n); j += (1 << l))
+			rotate(i, j, l);
+
+		fireStorm();
+	}
+
+	auto iceSum = [&]() -> int
+	{
+		int ret = 0;
+		for (int i = 0; i < (1 << n); i++)
+		for (int j = 0; j < (1 << n); j++)
+			ret += board[i][j];
+		return ret;
+	};
+
+	auto bigestPart = [&]() -> int
+	{
+		auto BFS = [&](int y, int x)
+		{
+			queue<pair<int, int>> q;
+			q.push({ y, x });
+			visited[y][x] = true;
+			int cnt = 0;
+
+			while (!q.empty())
+			{
+				int y = q.front().first;
+				int x = q.front().second;
+				q.pop();
+
+				cnt++;
+				for (int d = 0; d < 4; d++)
+				{
+					int nextY = y + moveY[d];
+					int nextX = x + moveX[d];
+				
+					if (nextY >= 0 && nextY < (1 << n) && nextX >= 0 && nextX < (1 << n))
+					if (board[nextY][nextX] && !visited[nextY][nextX])
+					{
+						q.push({ nextY, nextX });
+						visited[nextY][nextX] = true;
+					}
+				}
+			}
+			return cnt;
+		};
+
+		int ret = 0;
+		for (int i = 0; i < (1 << n); i++)
+		for (int j = 0; j < (1 << n); j++)
+		if (!visited[i][j] && board[i][j])
+			ret = max(ret, BFS(i, j));
+		return ret;
+	};
+
+	cout << iceSum() << "\n";
+	cout << bigestPart() << "\n";
+}
+/*
+#include<bits/stdc++.h>
 #define MAX 64
 using namespace std;
 
@@ -122,3 +263,4 @@ int main()
 
 	return 0;
 }
+*/
