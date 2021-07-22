@@ -8,12 +8,11 @@
 #define sz(v) (int)(v).size()
 
 using namespace std;
-const int MAX = 1e6;
+const int MAX = 1e6 + 1;
 int n;
 int numS[MAX];
 int gcdLtoR[MAX];
 int gcdRtoL[MAX];
-int result;
 
 int gcd(int a, int b)
 {
@@ -54,13 +53,14 @@ int main(void)
 			gcd_value = gcdLtoR[n - 2];
 		else
 			gcd_value = gcd(gcdLtoR[i - 1], gcdRtoL[i + 1]);
+
 		if (numS[i] % gcd_value != 0 && gcd_value > max) //뮨재에서 gcd로 뽑은 값이 나눠지면 안된다는 조건
 		{
-			max = result;
+			max = gcd_value;
 			maxIndex = i;
 		}
 	}
-	if (maxIndex == 0)
+	if (max == 0)
 		cout << -1 << "\n";
 	else
 		cout << max << " " << numS[maxIndex] << "\n";
