@@ -1,3 +1,74 @@
+#include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pii pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 1e6 + 1;
+int k;
+string input;
+queue<string> q;
+
+int main(void)
+{
+	fastio;
+	cin >> input >> k;
+	int M = input.size();
+
+	if (M == 1 || (M == 2 && stoi(input) % 10 == 0))
+	{
+		cout << -1 << "\n";
+		return 0;
+	}
+
+	auto BFS = [&]() -> int
+	{
+		q.push(input);
+		int cnt = 0;
+		int max_ret = 0;
+
+		while (!q.empty() && cnt < k)
+		{
+			int qSize = q.size();
+			set<string> visited;
+			for (int i = 0; i < qSize; i++)
+			{
+				string cur = q.front();
+				q.pop();
+
+				for (int i = 0; i < M - 1; i++)
+				{
+					for (int j = i + 1; j < M; j++)
+					{
+						//바꾸려는 숫자가 0인데 그게 첫 번째 자리로 오면 안되므로 continue
+						if (i == 0 && cur[j] == '0')
+							continue;
+						swap(cur[i], cur[j]);
+						if (!visited.count(cur)) //방문한 숫자가 아니라면
+						{
+							if (cnt == k - 1)
+								max_ret = max(max_ret, stoi(cur));
+							q.push(cur);
+							visited.insert(cur);
+						}
+						swap(cur[i], cur[j]);
+					}
+				}
+			}
+			cnt++;
+		}
+		if (cnt != k)
+			return -1;
+		else
+			return max_ret;
+	};
+	cout << BFS() << "\n";
+}
+/*
 #include<iostream>
 #include<queue>
 
@@ -82,3 +153,4 @@ int main(int argc, char *argv[])
 
 	cout << ret << "\n";
 }
+*/
