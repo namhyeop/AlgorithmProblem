@@ -1,5 +1,71 @@
 #include<bits/stdc++.h>
 #define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pii pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 51;
+int n, m;
+int ret = INT_MAX;
+int board[MAX][MAX];
+vector<pair<int, int>> chicken;
+vector<pair<int, int>> house;
+
+int main(void)
+{
+	fastio;
+	cin >> n >> m;
+
+	for (int i = 0; i < n; i++)
+	for (int j = 0; j < n; j++)
+	{
+		cin >> board[i][j];
+		if (board[i][j] == 1)
+			house.push_back({ i, j });
+		else if (board[i][j] == 2)
+			chicken.push_back({ i, j });
+	}
+
+	int s = chicken.size() - m;
+	vector<int> arr;
+	for (int i = 0; i < m; i++)
+		arr.push_back(1);
+	for (int i = 0; i < s; i++)
+		arr.push_back(0);
+	sort(arr.begin(), arr.end());
+
+	do
+	{
+		auto calculator = [&](int hy, int hx, int cy, int cx) -> int
+		{
+			return abs(hy - cy) + abs(hx - cx);
+		};
+		int sum = 0;
+		for (int i = 0; i < house.size(); i++)
+		{
+			int minValue = INT_MAX;
+			for (int j = 0; j < chicken.size(); j++)
+			{
+				if (!arr[j])
+					continue;
+				int dist = calculator(house[i].first, house[i].second, chicken[j].first, chicken[j].second);
+				minValue = min(dist, minValue);
+			}
+			sum += minValue;
+		}
+		ret = min(sum, ret);
+	} while (next_permutation(arr.begin(), arr.end()));
+
+	cout << ret << "\n";
+}
+
+/*
+#include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
 #define pill pair<int,int>
 #define mp(X,Y) make_pair(X,Y)
 #define mt(X,Y) make_tuple(X,Y)
@@ -77,6 +143,7 @@ int main(void)
 	DFS(0, 0);
 	cout << ret << "\n";
 }
+*/
 
 /*
 #include<bits/stdc++.h>
