@@ -31,6 +31,7 @@ void merge(int a, int b, ll diff)
 		return;
 	//parent를 변경하고, 무게 차이를 갱신
 	dist[pb] = dist[a] - dist[b] + diff;
+	//pa는 최고 부모
 	parent[pb] = pa;
 	return;
 }
