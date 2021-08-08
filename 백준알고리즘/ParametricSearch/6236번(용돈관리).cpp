@@ -47,6 +47,7 @@ int main(void)
         if(cnt <= m)
         {
             right = mid - 1;
+            //cout <<"test"<<"\n;
             ans = mid;
         }
         else
