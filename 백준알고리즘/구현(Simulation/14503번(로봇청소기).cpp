@@ -1,3 +1,82 @@
+//20210904 객체지향적 코드
+#include<bits/stdc++.h>
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pii pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 50;
+int board[MAX][MAX];
+int n, m;
+
+//+3 % 4
+//북동남서
+//남서북동
+int moveY[] = {-1,0,1,0};
+int moveX[] = {0,1,0,-1};
+int backY[] = {1,0,-1,0};
+int backX[] = {0,-1,0,1};
+
+struct Robot{
+    int n, m, dir,cnt;
+    pair<int,int> pos;
+    vector<vector<int>> board;
+    bool visited[MAX][MAX];
+
+    Robot(int n, int m) : n(n), m(m), cnt(1), board(n,vector<int>(m)){}
+
+    void init()
+    {
+        memset(visited, false, sizeof visited); //?
+        cin >> pos.first >> pos.second >> dir;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++)
+                cin >> board[i][j];
+        }
+        visited[pos.first][pos.second] = true;
+    }
+
+    void search(int y, int x, int d)
+    {
+
+        for(int i = d; i > d - 4; i--)
+        {
+            int tmpd = (i + 3) % 4;
+            int ny = y + moveY[tmpd];
+            int nx = x + moveX[tmpd];
+
+            if(ny < 0 || ny >= n || nx < 0 || nx >= m)
+                continue;
+            if(!visited[ny][nx] && board[ny][nx] == 0)
+            {
+                cnt++;
+                visited[ny][nx] = true;
+                search(ny, nx, tmpd);
+                return;
+            }
+        }
+
+        if(board[y + backY[d]][x + backX[d]] == 1)
+            return;
+        else
+            search(y + backY[d], x + backX[d], d);
+    }
+};
+
+int main(void)
+{
+    fastio;
+    cin >> n >> m;
+    Robot R(n, m);
+    R.init();
+    R.search(R.pos.first, R.pos.second, R.dir);
+    cout << R.cnt <<"\n";
+}
+/*
 //20210609
 #include<bits/stdc++.h>
 #define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
@@ -59,6 +138,8 @@ int main(void)
 	dfs(y, x, dir);
 	cout << cnt << "\n";
 }
+*/
+
 /*
 #include<bits/stdc++.h>
 #define MAX 50
