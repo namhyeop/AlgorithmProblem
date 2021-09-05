@@ -1,5 +1,76 @@
 #include<bits/stdc++.h>
 #define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
+#define pii pair<int,int>
+#define mp(X,Y) make_pair(X,Y)
+#define mt(X,Y) make_tuple(X,Y)
+#define mtt(X,Y,Z) make_tuple(X,Y,Z)
+#define ll long long
+#define sz(v) (int)(v).size()
+
+using namespace std;
+const int MAX = 21;
+int n;
+int board[MAX][MAX];
+bool visited[MAX];
+int ret = INT_MAX;
+
+int main(void)
+{
+    fastio;
+    cin >> n;
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            cin >> board[i][j];
+        }
+    }
+
+    auto DFS = [&](int cur, int cnt, auto&& DFS) -> void{
+        if(n / 2 == cnt)
+        {
+            //visited 배열값을 활용하여서 값들을 분류해준다.
+            vector<int> startTeam, linkTeam;
+            for(int i = 0; i < n; i++)
+            {
+                if(visited[i])
+                    startTeam.push_back(i);
+                else
+                    linkTeam.push_back(i);
+            }
+
+            int startRet = 0;
+            int linkRet = 0;
+            //start팀과 link팀의 수치를 구한뒤에 최소값을 갱신한다.
+            for(int i = 0; i < startTeam.size(); i++){
+                for(int j = i + 1; j < linkTeam.size(); j++){
+                    int start_y = startTeam[i];
+                    int start_x = startTeam[j];
+                    int link_y = linkTeam[i];
+                    int link_x = linkTeam[j];
+
+                    startRet += board[start_y][start_x] + board[start_x][start_y];
+                    linkRet += board[link_y][link_x] + board[link_x][link_y];
+                }
+            }
+            ret = min(ret, abs(startRet- linkRet));
+            return ;
+        }
+
+        //start팀과 Link팀의 구분을 위해서 체크를 해준다.
+        for(int i = cur + 1; i < n; i++){
+            visited[i] = true;
+            DFS(i, cnt + 1, DFS);
+            visited[i] = false;
+        }
+    };
+
+    DFS(0,0, DFS);
+    cout << ret << "\n";
+}
+
+/*
+#include<bits/stdc++.h>스
+#define fastio ios::sync_with_stdio(0), cin.tie(0), cout.tie(0)
 #define pill pair<int,int>
 #define mp(X,Y) make_pair(X,Y)
 #define mt(X,Y) make_tuple(X,Y)
@@ -64,7 +135,7 @@ int main(void)
 	dfs(0, 0);
 
 	cout << ret << "\n";
-}
+}*/
 
 /*
 #include<bits/stdc++.h>
