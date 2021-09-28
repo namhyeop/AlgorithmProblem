@@ -15,7 +15,7 @@ struct game{
     int n, q;
     int board[MAX][MAX];
     vector<int> L;
-    game(int n, int q) : n(n), q(q), L(q) {} //여기에다가 초기화 하고 싶은데 어떻게 하는거죠?
+    game(int n, int q) : n(n), q(q), L(q) {}
 
     bool isvalid(int y, int x){
         return (y >= 0 && y < n && x >= 0 && x < n);
@@ -107,7 +107,7 @@ struct game{
         bool visited[1 << 7][1 << 7];
         memset(visited, false, sizeof visited);
         int ret = 0;
-        //test file
+
         for(int i = 0; i < n ; i++){
             for(int j = 0; j < n; j++){
                 auto BFS = [&](int y, int x) -> int{
