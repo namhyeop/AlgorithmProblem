@@ -107,7 +107,7 @@ struct game{
         bool visited[1 << 7][1 << 7];
         memset(visited, false, sizeof visited);
         int ret = 0;
-        //
+        //test file
         for(int i = 0; i < n ; i++){
             for(int j = 0; j < n; j++){
                 auto BFS = [&](int y, int x) -> int{
