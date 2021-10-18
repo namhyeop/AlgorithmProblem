@@ -9,9 +9,11 @@ int solution(vector<int> food_times, long long k) {
         sum += food_times[i];
         pfood_times.push(make_pair(food_times[i], (i + 1)));
     }
+    //if sum Value is less then or equal to k. it is mean search is impossible
     if (sum <= k)    return -1;
     while ((pfood_times.top().first - before) * pfood_times.size() <= k) {
         k -= (pfood_times.top().first - before) * pfood_times.size();
+        //Update the time of the previous food to the time of the current food.
         before = pfood_times.top().first;
         pfood_times.pop();
     }
@@ -20,6 +22,7 @@ int solution(vector<int> food_times, long long k) {
         ftimes.push_back(make_pair(pfood_times.top().second, pfood_times.top().first));
         pfood_times.pop();
     }
+    //Arrange the food in the order of beginning
     sort(ftimes.begin(), ftimes.end());
     return ftimes[k % ftimes.size()].first;
 }

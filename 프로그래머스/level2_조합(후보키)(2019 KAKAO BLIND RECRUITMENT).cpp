@@ -1,4 +1,3 @@
-level2_완전탐색+백트래킹(후보키)(2019 KAKAO BLIND RECRUITMENT)
 #include <bits/stdc++.h>
 
 using namespace std;

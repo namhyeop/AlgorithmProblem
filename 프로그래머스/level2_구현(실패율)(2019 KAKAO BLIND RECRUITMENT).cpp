@@ -22,18 +22,22 @@ vector<int> solution(int N, vector<int> stages) {
     vector<int> answer;
     for(auto n : stages){
         remainPeople[n]++;
+        //n개의 층까지 도달한것은 n이전의 층들을 도달한것이므로 점수를 더해준다.
         for(int i = 1; i <= n; i++){
             tryPeople[i]++;
         }
     }
     vector<pair<int,double>> info;
     for(int i = 1; i <= N; i++){
+        //시도한 사람이 없는 경우 실패율은 0이므로 예외처리
         if(tryPeople[i] == 0){
             info.push_back({i, 0});
             continue;
         }
+        //문제의 조건을 활용하여 정보를 갱신한다.
         info.push_back({i,remainPeople[i] / double(tryPeople[i])});
     }
+    //실패율에 비례한 정렬(문제조건)
     sort(info.begin(), info.end(), cmp);
     for(int i = 0; i < info.size(); i++){
         answer.push_back(info[i].first);
