@@ -61,6 +61,9 @@ vector<int> solution(int m, int n, vector<vector<int>> picture) {
 
 int main() {
     int a = 6, b = 4;
+
+
+    xcxse
     vector<vector<int>> c = {{1, 1, 1, 0},
                              {1, 2, 2, 0},
                              {1, 0, 0, 1},
