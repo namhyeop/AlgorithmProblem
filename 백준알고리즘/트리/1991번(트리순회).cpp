@@ -1,67 +1,127 @@
-//이 방법이 훨씬 더 직접적
-#include<iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-char Tree[26][2];
+int n;
 
-void preorder(char root)
-{
-	if (root == '.')
-		return;
-	else
-	{
-		cout << root;
-		preorder(Tree[root - 'A'][0]);
-		preorder(Tree[root - 'A'][1]);
-	}
+struct Node{
+    char left, right;
+};
+
+vector<Node> arr[26];
+
+void pre_search(int cur){
+    if(char('A' + cur) == '.'){
+        return ;
+    }
+    cout << char('A' + cur);
+    for(Node next : arr[cur]){
+        pre_search(next.left - 'A');
+        pre_search(next.right - 'A');
+    }
 }
 
-void inorder(char root)
-{
-	if (root == '.')
-		return;
-	
-		inorder(Tree[root - 'A'][0]);
-		cout << root;
-		inorder(Tree[root - 'A'][1]);
+void middle_search(int cur){
+    if(char('A' + cur) == '.'){
+        return ;
+    }
+    for(Node next : arr[cur]){
+        middle_search(next.left - 'A');
+        cout << char('A' + cur);
+        middle_search(next.right - 'A');
+    }
 }
 
-void postorder(char root)
-{
-	if (root == '.')
-		return;
-		
-		postorder(Tree[root - 'A'][0]);
-		postorder(Tree[root - 'A'][1]);
-		cout << root;
+void post_search(int cur){
+    if(char('A' + cur) == '.'){
+        return ;
+    }
+    for(Node next : arr[cur]){
+        post_search(next.left - 'A');
+        post_search(next.right - 'A');
+        cout << char('A' + cur);
+    }
+}
+int main(){
+    cin >> n;
+
+    for(int i = 0; i < n; i++){
+        char node;
+        char left , right;
+        cin >> node >> left >> right;
+        arr[node - 'A'].push_back({left, right});
+    }
+    pre_search(0);
+    cout <<"\n";
+    middle_search(0);
+    cout <<"\n";
+    post_search(0);
 }
 
-int main(int argc, char *argv[])
-{
-	int Testcase;
-	cin >> Testcase;
-
-	char root;
-	char left;
-	char right;
-
-	for (int i = 0; i < Testcase; i++)
-	{
-		cin >> root >> left >> right;
-		Tree[root - 'A'][0] = left;
-		Tree[root - 'A'][1] = right;
-	}
-
-	preorder('A');
-	cout << '\n';
-	inorder('A');
-	cout << '\n';
-	postorder('A');
-	cout << '\n';
-
-	return 0;
-}
+////이 방법이 훨씬 더 직접적
+//#include<iostream>
+//
+//using namespace std;
+//
+//char Tree[26][2];
+//
+//void preorder(char root)
+//{
+//	if (root == '.')
+//		return;
+//	else
+//	{
+//		cout << root;
+//		preorder(Tree[root - 'A'][0]);
+//		preorder(Tree[root - 'A'][1]);
+//	}
+//}
+//
+//void inorder(char root)
+//{
+//	if (root == '.')
+//		return;
+//
+//		inorder(Tree[root - 'A'][0]);
+//		cout << root;
+//		inorder(Tree[root - 'A'][1]);
+//}
+//
+//void postorder(char root)
+//{
+//	if (root == '.')
+//		return;
+//
+//		postorder(Tree[root - 'A'][0]);
+//		postorder(Tree[root - 'A'][1]);
+//		cout << root;
+//}
+//
+//int main(int argc, char *argv[])
+//{
+//	int Testcase;
+//	cin >> Testcase;
+//
+//	char root;
+//	char left;
+//	char right;
+//
+//	for (int i = 0; i < Testcase; i++)
+//	{
+//		cin >> root >> left >> right;
+//		Tree[root - 'A'][0] = left;
+//		Tree[root - 'A'][1] = right;
+//	}
+//
+//	preorder('A');
+//	cout << '\n';
+//	inorder('A');
+//	cout << '\n';
+//	postorder('A');
+//	cout << '\n';
+//
+//	return 0;
+//}
 
 
 /*
