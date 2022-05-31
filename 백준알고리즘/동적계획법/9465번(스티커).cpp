@@ -1,38 +1,88 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 
 using namespace std;
+#define MAX 100005
 
-int cache[2][100001];
-int arr[2][100001];
-int Testcase;
-int main()
-{
-	cin >> Testcase;
+int n;
+int a[MAX][2];
+int cache[MAX][3];
 
-	for (int i = 0; i < Testcase; i++)
-	{
-		int width;
-		cin >> width;
-		int maxValue;
-
-		for (int i = 0; i < 2; i++)
-		for (int j = 0; j < width; j++)
-			cin >> arr[i][j];
-		
-		cache[0][0] = arr[0][0];
-		cache[1][0] = arr[1][0];
-		cache[0][1] = arr[0][1] + cache[1][0];
-		cache[1][1] = arr[1][1] + cache[0][0];
-		
-		for (int i = 2; i < width; i++)
-		{
-			cache[0][i] = arr[0][i] + max(cache[1][i - 1], cache[1][i -2]);
-			cache[1][i] = arr[1][i] + max(cache[0][i - 1], cache[0][i - 2]);
-		}
-
-		cout << max(cache[0][width -1], cache[1][width - 1]) << '\n';
-	}
+void input(){
+    cin >> n;
+    for(int j = 0; j <= 1; j++){
+        for(int i = 1; i <= n; i++){
+            cin >> a[i][j];
+        }
+    }
 }
+
+void pro(){
+    for(int i = 1; i <= n; i++){
+        for(int j = 0; j < 3; j++) cache[i][j] = 0;
+    }
+
+    cache[1][1] = a[1][0];
+    cache[1][2] = a[1][1];
+
+    for(int i = 2; i <= n; i++){
+        for(int prev = 0; prev <= 2; prev++){
+            cache[i][0] = max(cache[i][0], cache[i - 1][prev]);
+            for(int j = 0; j <= 1; j++){
+                //prev가 1, j가 0, prev가 2, j가 1일 때 생략
+                if(prev & (1 << j)) continue;
+                cache[i][1 << j] = max(cache[i][1 << j], cache[i - 1][prev] + a[i][j]);
+            }
+        }
+    }
+
+    cout << max({cache[n][0], cache[n][1], cache[n][2]});
+
+}
+
+int main(){
+    int t; cin >> t;
+    while(t--){
+        input();
+        pro();
+    }
+
+}
+
+//#include<bits/stdc++.h>
+//
+//using namespace std;
+//
+//int cache[2][100001];
+//int arr[2][100001];
+//int Testcase;
+//int main()
+//{
+//	cin >> Testcase;
+//
+//	for (int i = 0; i < Testcase; i++)
+//	{
+//		int width;
+//		cin >> width;
+//		int maxValue;
+//
+//		for (int i = 0; i < 2; i++)
+//		for (int j = 0; j < width; j++)
+//			cin >> arr[i][j];
+//
+//		cache[0][0] = arr[0][0];
+//		cache[1][0] = arr[1][0];
+//		cache[0][1] = arr[0][1] + cache[1][0];
+//		cache[1][1] = arr[1][1] + cache[0][0];
+//
+//		for (int i = 2; i < width; i++)
+//		{
+//			cache[0][i] = arr[0][i] + max(cache[1][i - 1], cache[1][i -2]);
+//			cache[1][i] = arr[1][i] + max(cache[0][i - 1], cache[0][i - 2]);
+//		}
+//
+//		cout << max(cache[0][width -1], cache[1][width - 1]) << '\n';
+//	}
+//}
 /*
 #include<iostream>
 #include<algorithm>
